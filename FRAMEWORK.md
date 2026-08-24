@@ -22,6 +22,10 @@ The seven questions, in plain terms:
 - **L5 Guardrails:** what controls do we wrap around it in production?
 - **L6 Upkeep:** how do we keep this decision valid as the model, threats, and rules change?
 
+<p align="center">
+  <img src="assets/model-trust-gate-diagram.png" alt="The Model Trust Gate: seven ordered checks from L0 to L6, run cheapest first, each ending in pass, conditional pass, or fail. Passing all seven produces a signed, dated Model Trust Record; a fail at any gate stops the sequence and is recorded." width="560">
+</p>
+
 **Scrutiny scales with stakes.** A meeting-notes tool gets a light review (level R1); a model deciding insurance claims gets a heavy one (level R4). The scrutiny level belongs to the *use*, not the model.
 
 **The one idea to remember.** Both cloud and open-weight models need behavior and attack testing (L3 to L4). What downloading and self-hosting an open-weight model *adds* is supply-chain risk (L1 to L2) that a reputable cloud API mostly spares you, because you now hold and run the files. It can also raise the technical risk, since you lose the vendor's runtime safety layer and may change the model when you compress or fine-tune it. So the rule of thumb "cloud means the hard work is L3 to L4, open-weight means it is L1 to L2" is about where the *extra, distinctive* effort lands, not a claim that either side is risk-free.
