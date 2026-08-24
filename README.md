@@ -2,7 +2,7 @@
 
 *A step-by-step way to decide whether your organization should trust a given AI model, for a specific use, with the right amount of scrutiny and a record you can show an auditor.*
 
-**Status:** working draft (v0.2), a personal working document. Facts that still need a primary-source check are tagged `[verify]` in the text.
+**Status:** working draft (v0.2.1), a personal working document. Facts that still need a primary-source check are tagged `[verify]` in the text.
 
 ## The problem
 
@@ -22,7 +22,7 @@ Start with the framework, then the validation.
 ## The idea in one screen
 
 - **A fail-fast gate.** Seven checks run in order, cheap and administrative first, expensive and technical last, so a model that fails an early check is stopped before you spend on the hard testing.
-- **Scrutiny matches the stakes.** How hard you look is set by a Rigor Level (R1 to R4), driven by the model's autonomy and agency (the AWS / CSA Agentic AI Security Scoping Matrix) and the sensitivity of the data.
+- **Scrutiny matches the stakes.** How hard you look is set by a Rigor Level (R1 to R4), driven by four things: the model's autonomy and agency (the AWS / CSA Agentic AI Security Scoping Matrix), the sensitivity of the data, and the impact of its output on a person or the business.
 - **Origin decides where the effort lands.** For a cloud model the work is mostly behavior and attack testing; for a downloaded open-weight model, the supply-chain and legal checks are the hard part.
 - **The output is a record, not a score.** A signed, dated Model Trust Record, scoped to one use, with an expiry.
 

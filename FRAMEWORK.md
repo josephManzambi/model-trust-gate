@@ -2,7 +2,7 @@
 
 *A step-by-step way to decide whether your organization should trust a given AI model, for a specific use, with the right amount of scrutiny and a record you can show an auditor.*
 
-**Status:** working draft (v0.2). Facts that need a primary-source check before publication are tagged `[verify]`.
+**Status:** working draft (v0.2.1). Facts that need a primary-source check before publication are tagged `[verify]`.
 
 ---
 
@@ -88,7 +88,7 @@ Two drivers come straight from the AWS / CSA Agentic AI Security Scoping Matrix,
 
 The third driver is **data sensitivity**: public, internal, or regulated and personal data.
 
-The fourth driver is **consequence: how much its output affects a person or the business, whether or not the model "acts."** A model that only outputs a score still drives a real decision when that score screens a job applicant, prices insurance, or ranks a claim. Customer-facing reach and blast radius live here too. This driver exists because a pure advisory or scoring model can be Scope 1 on autonomy and read-only on agency, yet be one of the highest-stakes uses in the building.
+The fourth driver is **impact (also called consequence): how much its output affects a person or the business, whether or not the model "acts."** A model that only outputs a score still drives a real decision when that score screens a job applicant, prices insurance, or ranks a claim. Customer-facing reach and blast radius live here too. This driver exists because a pure advisory or scoring model can be Scope 1 on autonomy and read-only on agency, yet be one of the highest-stakes uses in the building. (This is the rigor input, distinct from the formal AI System Impact Assessment produced at L2; its four levels track the EU AI Act's risk framing, from minimal to high-risk.)
 
 Your Rigor Level is the highest level reached by any of the four:
 
@@ -101,7 +101,7 @@ Your Rigor Level is the highest level reached by any of the four:
 
 Two rules keep this honest:
 
-- **A regulatory floor sits on top of the four drivers.** Some uses are high-risk by law regardless of how they score. A CV-screening model is Scope 1 and read-only, but the EU AI Act classifies it high-risk, so it is at least R4. The consequence driver catches most such cases on its own; the floor is the backstop for anything the drivers miss.
+- **A regulatory floor sits on top of the four drivers.** Some uses are high-risk by law regardless of how they score. A CV-screening model is Scope 1 and read-only, but the EU AI Act classifies it high-risk, so it is at least R4. The impact driver catches most such cases on its own; the floor is the backstop for anything the drivers miss.
 - **Rigor is set at L0, but it is not frozen.** If Layers 3 or 4 reveal a capability the intake could not see (for example, the model emits links a downstream service will fetch, or can reach a tool you had not scoped), re-open L0 and raise the level. The intake sets the strength of the later tests, so a capability discovered later must be allowed to raise it.
 
 Why reuse the AWS/CSA matrix rather than invent a scale: it is a published standard (AWS defined it, CSA enhanced it into a multi-dimensional version), it separates autonomy from agency cleanly, and where your organization already scopes agents this way, the Gate reads from a call your teams already make.
@@ -241,7 +241,7 @@ Model:            Frontier Chat v5 (cloud) @ endpoint pinned 2026-08-01, version
 Origin:           cloud API
 Modified:         no
 Use case:         Customer-support agent that looks up and updates a customer's order records
-Scrutiny level:   R3  (Scope 3 supervised autonomy; customer-facing consequence; customer PII)
+Scrutiny level:   R3  (Scope 3 supervised autonomy; customer-facing impact; customer PII)
 Per-layer result: L0 pass · L1 pass · L2 pass · L3 conditional · L4 conditional · L5 pass
 Overall:          Allow with controls
 Controls added:   (1) instruction / tool-output separation + spotlighting on the order-lookup tool,
