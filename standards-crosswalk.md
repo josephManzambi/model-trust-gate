@@ -20,3 +20,51 @@ This is the control-level backing for the Gate. For each layer it names the ISO/
 - At **L0 and L2**, record the specific control IDs above that the use touches in the Model Trust Record (the `Impact assessment` and evidence fields), plus the ISO 42001 impact-assessment reference. That turns "we mapped it to AICM" into a named, checkable set of controls.
 - The **AICM domains** in play across the Gate are GRC (governance, risk, compliance), STA (supply chain and third-party), MDS (model and data security), AIS (application and agent security), TVM (threat and vulnerability management), and A&A (audit and assurance). The Gate consumes the relevant controls in these domains; it is not a full implementation of AICM (247 controls across 18 domains).
 - Where your organization already runs an ISO 42001 AI management system, these are the clauses a Gate decision produces evidence for, so the two do not duplicate each other.
+
+## Control reference (plain English)
+
+These are plain-English orientations to what each AICM control ID above covers, so the crosswalk reads without the paywalled workbook open. They are paraphrases of the control area, not verbatim AICM text; confirm exact titles and normative wording against the CSA AICM v1.1 workbook before an audit.
+
+**GRC (governance, risk, compliance)**
+- **GRC-01** governance program and policy: maintain a documented AI governance program with policies for how AI is developed, procured, and used.
+- **GRC-02** AI risk management program: run a defined process to identify, assess, treat, and monitor AI-specific risks.
+- **GRC-06** governance responsibility model: assign named, accountable owners for AI governance decisions and outcomes.
+- **GRC-07** `[verify]` obligation mapping: map the regulatory and contractual obligations that attach to the AI use. Secondary mappings also label GRC-07 "information security committee", so confirm the canonical title against AICM v1.1.
+- **GRC-10** AI impact assessment: assess the impact of an AI system on people, rights, and the business before and during use.
+
+**STA (supply chain and third-party)**
+- **STA-08** supply chain inventory: keep an inventory of the AI supply chain (models, data, components, providers).
+- **STA-09** supply chain risk management: assess and manage risk from third-party AI components and providers on a recurring basis.
+- **STA-15** supply chain data security assessment: assess how data is protected across the AI supply chain and its providers.
+- **STA-16** service bill of materials: obtain and maintain a bill of materials for the AI service and its components.
+
+**MDS (model and data security)**
+- **MDS-03** model documentation: maintain documentation of the model, its purpose, data, and limitations.
+- **MDS-04** model documentation requirements: define what that model documentation must contain.
+- **MDS-06** adversarial attack analysis: test the model against adversarial attacks and analyze the results.
+- **MDS-10** model continuous monitoring: monitor the model's behavior and performance continuously in operation.
+- **MDS-12** open model risk assessment: assess the specific risks of adopting an open-weight model.
+
+**AIS (application and agent security)**
+- **AIS-02** application security baseline: apply a baseline of application security controls to the AI application.
+- **AIS-05** application security testing: security-test the AI application, including the model integration.
+- **AIS-08** input validation: validate and sanitize inputs to the AI application.
+- **AIS-11** agent security boundaries: enforce boundaries on what an AI agent can access and do.
+- **AIS-13** AI sandboxing: run the model or agent in a constrained, isolated environment.
+
+**TVM (threat and vulnerability management)**
+- **TVM-05** external library management: manage the security of external libraries and dependencies used by the AI system.
+
+**A&A (audit and assurance)**
+- **A&A-02** independent assessments: obtain an independent assessment or audit of the AI system and its controls.
+- **A&A-04** requirements compliance: verify the AI system meets the applicable legal, regulatory, and contractual requirements.
+
+## Using this with the actual controls
+
+This crosswalk is an index, not a copy of the control catalogs. The normative control text lives in the source documents, which you open alongside the IDs above:
+
+- **CSA AICM v1.1** (the 247 control objectives): the CSA AI Controls Matrix workbook, published by the Cloud Security Alliance. Authoritative for the GRC / STA / MDS / AIS / TVM / A&A IDs.
+- **ISO/IEC 42001** (clauses and Annex A controls): the purchased ISO standard. Authoritative for the clause and Annex A references; it is paywalled, so those are cited at the clause and Annex-A-area level here.
+- **OWASP Top 10 for LLM Applications 2026** and the **Agentic (ASI) Top 10**: free at genai.owasp.org.
+- **NIST**: AI RMF, AI 600-1 (Generative AI Profile), SP 800-218 (SSDF), and AI 100-2 E2025 (adversarial-ML taxonomy), all free from NIST.
+- **EU AI Act**: the official consolidated text on EUR-Lex.
