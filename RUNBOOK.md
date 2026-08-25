@@ -8,6 +8,29 @@ The runbook adds nothing to the method. It only makes it runnable: it turns the 
 
 ---
 
+## The flow at a glance
+
+```mermaid
+flowchart TD
+    A["Step 0 — Intake<br/>model · origin · use · 4 drivers"] --> B["Step 1 — Triage<br/>highest driver → Rigor R1–R4<br/>+ regulatory floor"]
+    B --> C{"Step 2 — Track?"}
+    C -->|"R1/R2 · cloud or hosted open-weight<br/>· unmodified · no floor"| D["Fast track<br/>(same gate, expensive high-rigor steps omitted)"]
+    C -->|"R3/R4 · downloaded open-weight<br/>· modified · any regulatory floor"| E["Full track<br/>(every layer, full strength)"]
+    D --> G
+    E --> G
+    subgraph G["The seven-layer gate — run in order, fail-fast"]
+      direction LR
+      L0["L0<br/>Stakes"] --> L1["L1<br/>Provenance"] --> L2["L2<br/>Permission"] --> L3["L3<br/>Behavior"] --> L4["L4<br/>Attack"] --> L5["L5<br/>Guardrails"] --> L6["L6<br/>Upkeep"]
+    end
+    G -.->|"stop at any layer"| DENY["Deny<br/>(process ends)"]
+    L6 --> X["Exit Gate<br/>Risk Transfer Document · two signatures"]
+    X --> R[("Model Trust Record<br/>Allow · Allow with controls · Restrict · Deny")]
+```
+
+Each layer ends in **pass**, **conditional** (allowed once a named L5 control is added), or **stop** (a Deny that ends the run). The cheap governance layers (L0–L2) come first so an early stop saves the expensive testing (L3–L4). The output is always a scoped record, never "this model is safe."
+
+---
+
 ## Step 0 — Intake (one page, fill this first)
 
 Copy this block into the ticket. It is everything the reviewer needs to start; if a field can't be answered, that is itself a finding for L0/L2.
