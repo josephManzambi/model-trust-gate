@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/josephmanzambi/model-trust-gate/templates/model-trust-record.schema.json",
+  "title": "Model Trust Record",
+  "description": "The signed, dated output of one Model Trust Gate run: one model, one use, one decision. Structured so a policy engine (e.g. OPA) can check its invariants at a deployment gate. The schema checks shape and consistency, not truth: whether a human should have written 'stop' instead of 'conditional' is beyond it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "model", "version", "origin", "modified", "use_case", "rigor",
+    "regulatory_floor", "layers", "overall", "evidence", "guardrails",
+    "re_entry_log", "scope_changes", "risk_transfer_accepted",
+    "expires_date", "approved_by", "record_status"
+  ],
+  "properties": {
+    "model": { "type": "string", "description": "Model name and family." },
+    "version": { "type": "string", "description": "Exact served version or file build/hash. 'latest' is not valid." },
+    "origin": {
+      "type": "string",
+      "enum": ["cloud", "hosted-open-weight", "downloaded-open-weight"],
+      "description": "cloud = provider's own model over an API; hosted-open-weight = open-lineage model served through a cloud provider (e.g. Qwen/Llama on Bedrock); downloaded-open-weight = weights you run yourself."
+    },
+    "modified": {
+      "type": "string",
+      "enum": ["no", "quantized", "fine-tuned", "merged"],
+      "description": "Anything other than 'no' voids inherited behavioural evidence (re-test on the deployed artifact) and may flip your EU AI Act role to provider."
+    },
+    "use_case": { "type": "string" },
+    "rigor": { "type": "string", "enum": ["R1", "R2", "R3", "R4"] },
+    "regulatory_floor": {
+      "type": "string",
+      "description": "e.g. 'EU AI Act high-risk' or 'none'. A floor raises rigor regardless of the four drivers."
+    },
+    "impact_assessment": {
+      "type": ["string", "null"],
+      "description": "ISO/IEC 42001 AI System Impact Assessment reference; plus EU AI Act FRIA reference where Art. 27 applies."
+    },
+    "layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["L0", "L1", "L2", "L3", "L4", "L5"],
+      "properties": {
+        "L0": { "$ref": "#/$defs/verdict" },
+        "L1": { "$ref": "#/$defs/verdict" },
+        "L2": { "$ref": "#/$defs/verdict" },
+        "L3": { "$ref": "#/$defs/verdict" },
+        "L4": { "$ref": "#/$defs/verdict" },
+        "L5": { "$ref": "#/$defs/verdict" }
+      }
+    },
+    "overall": {
+      "type": "string",
+      "enum": ["allow", "allow_with_controls", "restrict", "deny"]
+    },
+    "narrowed_use": {
+      "type": ["string", "null"],
+      "description": "Required (non-null) iff overall == 'restrict': the narrower use this record is valid for."
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["layer", "source", "valid"],
+        "properties": {
+          "layer": { "type": "string", "enum": ["L1", "L2", "L3", "L4"] },
+          "source": { "type": "string", "enum": ["ours", "vendor's"] },
+          "tier": {
+            "type": ["string", "null"],
+            "enum": ["T1", "T2", "T3", null],
+            "description": "Re-test tier for L3/L4 behavioural evidence; null (n/a) for L1/L2."
+          },
+          "valid": { "type": "boolean" },
+          "ref": { "type": ["string", "null"], "description": "Link to the ticket/report holding the evidence." }
+        }
+      }
+    },
+    "guardrails": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "config_version", "closes", "last_retest"],
+        "properties": {
+          "id": { "type": "string" },
+          "config_version": { "type": "string" },
+          "closes": { "type": "string", "description": "The L3/L4 finding id this control closes, e.g. 'L4-F1'." },
+          "last_retest": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "re_entry_log": {
+      "type": "array",
+      "description": "Each N-1 fallback trigger that fired.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trigger", "layers_reopened"],
+        "properties": {
+          "trigger": { "type": "string", "enum": ["modification", "new-capability", "scope-change"] },
+          "layers_reopened": { "type": "array", "items": { "type": "string" } },
+          "rigor_change": { "type": ["string", "null"], "description": "e.g. 'R2 -> R3' or null." }
+        }
+      }
+    },
+    "scope_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["old_scope", "new_scope", "verified_removal_ref", "floor_check"],
+        "properties": {
+          "old_scope": { "type": "string" },
+          "new_scope": { "type": "string" },
+          "verified_removal_ref": { "type": "string", "description": "Evidence the capability was actually removed (grant revoked, egress cut), not just re-described." },
+          "floor_check": { "type": "string" },
+          "l5_revalidation_ref": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "risk_transfer_ref": { "type": ["string", "null"], "description": "Risk Transfer Document reference handed to the system-level review." },
+    "risk_transfer_accepted": { "type": "boolean", "description": "Must be true if risk_transfer_ref is set, or the deployment gate denies." },
+    "expires_date": { "type": "string", "format": "date", "description": "Required machine date; the deployment gate denies once now > this." },
+    "expires_event": { "type": ["string", "null"], "description": "The human 'or event' trigger, e.g. 'next model-version bump'." },
+    "approved_by": { "type": "string", "description": "Name + role. For R3/R4, must be independent of the team proposing the model." },
+    "incident_owner": { "type": ["string", "null"], "description": "Who notifies the provider/regulator on an incident, plus the deadline." },
+    "retention": { "type": ["string", "null"], "description": "How long the record is kept; at least the EU AI Act Art. 18 floor once provider status attaches." },
+    "record_status": { "type": "string", "enum": ["append-only"], "description": "A re-check produces a new record, not an edit." },
+    "record_signature": { "type": ["string", "null"], "description": "Signature over the record; required by the OPA policy at the gate." }
+  },
+  "allOf": [
+    {
+      "description": "restrict requires a narrowed_use.",
+      "if": { "properties": { "overall": { "const": "restrict" } } },
+      "then": { "required": ["narrowed_use"], "properties": { "narrowed_use": { "type": "string" } } }
+    },
+    {
+      "description": "A transferred risk must be accepted.",
+      "if": { "properties": { "risk_transfer_ref": { "type": "string" } }, "required": ["risk_transfer_ref"] },
+      "then": { "properties": { "risk_transfer_accepted": { "const": true } } }
+    }
+  ],
+  "$defs": {
+    "verdict": { "type": "string", "enum": ["pass", "conditional", "stop"] }
+  }
+}
