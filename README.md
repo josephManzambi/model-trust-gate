@@ -12,12 +12,18 @@ It does not invent new controls. It composes standards that already exist and ar
 
 ## How to read this repo
 
-Start with the framework, then the validation.
+Start with the framework, then the validation. When you have an actual model to review, work from the runbook.
 
 - **[FRAMEWORK.md](FRAMEWORK.md)**: the method. Executive summary, the seven-layer gate, Rigor Levels, and the Model Trust Record. **Start here.**
+- **[RUNBOOK.md](RUNBOOK.md)**: the method made runnable. A one-page intake, a triage that sets the scrutiny level, a fast track for low-stakes uses, effort sizing, a per-layer checklist, and default pass-bars. **Work from here when a team brings you a model.**
 - **[VALIDATION.md](VALIDATION.md)**: how the method holds up, via a coverage crosswalk against the standard risk lists, four worked adoption runs, and an attack on the method itself.
 - **[experiments/claim-verification.md](experiments/claim-verification.md)**: a protocol to empirically test the framework's central claim, that self-hosting an open-weight model relocates supply-chain risk onto the adopter.
 - **[standards-crosswalk.md](standards-crosswalk.md)**: the control-level backing, each layer mapped to ISO/IEC 42001 clauses and CSA AICM control IDs.
+
+### Run one
+
+- **[templates/model-trust-record.md](templates/model-trust-record.md)**: a fillable Model Trust Record (copy per adoption), with the [JSON schema](templates/model-trust-record.schema.json) for policy-engine gating and a [filled-in example](templates/model-trust-record.bedrock-example.json).
+- **[runbooks/bedrock-hosted-open-weight.md](runbooks/bedrock-hosted-open-weight.md)**: a full worked run for the most common request — an open model (Qwen, Llama) served through a cloud provider like AWS Bedrock — from intake to signed record.
 
 ## The idea in one screen
 

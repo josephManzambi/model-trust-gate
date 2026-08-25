@@ -1,0 +1,41 @@
+{
+  "model": "Qwen2.5-72B-Instruct (open-lineage, served via AWS Bedrock)",
+  "version": "bedrock model id qwen.qwen2-5-72b-instruct-v1:0, pinned 2026-08-25",
+  "origin": "hosted-open-weight",
+  "modified": "no",
+  "use_case": "Internal knowledge assistant: staff ask questions over internal docs; read-only, cannot act.",
+  "rigor": "R2",
+  "regulatory_floor": "none",
+  "impact_assessment": "ISO 42001 AISIA ref AISEC-611; no FRIA (Art. 27 trigger does not apply to this internal use)",
+  "layers": {
+    "L0": "pass",
+    "L1": "pass",
+    "L2": "pass",
+    "L3": "pass",
+    "L4": "pass",
+    "L5": "pass"
+  },
+  "overall": "allow_with_controls",
+  "narrowed_use": null,
+  "evidence": [
+    { "layer": "L1", "source": "vendor's", "tier": null, "valid": true, "ref": "AWS SOC 2 + ISO 27001; Bedrock served-model id and version confirmed pinned (AISEC-611)" },
+    { "layer": "L2", "source": "ours", "tier": null, "valid": true, "ref": "First-time origin + data-governance sign-off; Bedrock data terms (in-region, inputs/outputs not used to train base models) confirmed (AISEC-611)" },
+    { "layer": "L3", "source": "ours", "tier": "T2", "valid": true, "ref": "Behavior suite scorecard, run on the Bedrock-served model; no prior baseline to diff (AISEC-611)" },
+    { "layer": "L3", "source": "vendor's", "tier": "T1", "valid": true, "ref": "Model card; inherited safety testing labelled thin vs a frontier lab's" },
+    { "layer": "L4", "source": "ours", "tier": "T3", "valid": true, "ref": "Automated attack suite at R2 strength; no critical survived (AISEC-611)" }
+  ],
+  "guardrails": [
+    { "id": "gr-bedrock-guardrail-io", "config_version": "1", "closes": "defense-in-depth (input+output; verified against the paths L3/L4 exercised)", "last_retest": "2026-08-25" }
+  ],
+  "re_entry_log": [],
+  "scope_changes": [],
+  "risk_transfer_ref": "RTD-611",
+  "risk_transfer_accepted": true,
+  "expires_date": "2027-02-21",
+  "expires_event": "the provider updates the served model version",
+  "approved_by": "A. Okafor, AI Security reviewer (independent of the requesting team)",
+  "incident_owner": "SOC on-call; notify AWS support and, if reportable, the regulator within the Art. 73 deadline",
+  "retention": "3 years (matches the internal knowledge-platform records policy)",
+  "record_status": "append-only",
+  "record_signature": "<detached signature over the canonicalized record>"
+}
