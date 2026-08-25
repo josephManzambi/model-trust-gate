@@ -5,7 +5,7 @@ A method for making decisions is only worth adopting if it does two things: it c
 Four kinds of test:
 
 1. **Coverage:** does the Gate catch the risks the industry already agrees are real?
-2. **Worked runs:** three realistic adoption situations, run through the Gate to see if the answer makes sense.
+2. **Worked runs:** four realistic adoption situations, run through the Gate to see if the answer makes sense.
 3. **Empirical pilot:** a controlled harness that measures the central open-weight risk claim on real (small, local) models.
 4. **Attacking the method:** where could the Gate give a falsely confident answer, and what stops that?
 
@@ -129,11 +129,29 @@ These three are not defects to patch. They are the honest edge of a framework wr
 
 **Result:** Allow with controls, R2, open-weight. What familiarity saved: verifying the publisher's identity, and having a known baseline to compare against. What it did **not** save, and this is the lesson: scanning the specific new file and re-reading the licence. The mistake it guards against is transitive trust, "we've used this publisher before, so this release is fine," which is exactly how a quietly relicensed file (here) or a poisoned one (Case A above) slips through. A familiar publisher lowers the cost of the gate; it never lets you skip it.
 
-The three cases together trace a gradient. The new cloud version inherited almost all governance. The familiar open-weight release inherited the publisher's identity but re-verified each file. The unfamiliar open-weight release inherited nothing and did the full supply-chain workup. Same seven layers throughout; the origin and the history just move where the effort lands.
+---
+
+## Test 5: Adopting an open-lineage model through a cloud provider (first time)
+
+*Situation: a team wants to use a Qwen model served through AWS Bedrock for an internal knowledge assistant (R2), the same use as Tests 3 and 4, but this time the open-lineage model arrives as a managed cloud API rather than a downloaded file. First time using this model and this model family. Illustrative, not a claim about any real model.*
+
+| Layer | What happens | Result |
+|---|---|---|
+| L0 | Internal, some sensitive data, cannot act on its own. Stakes: **R2**. Origin: cloud-delivered third-party open-lineage model (no weights held). | Pass (R2) |
+| L1 | No weight file on our disk, so there is no malware, format, or checksum scan to run: that supply-chain surface is absorbed by the provider. Confirm which exact model variant and version Bedrock serves, and that it is pinned. Light. | Pass |
+| L2 | **Where a first-time, third-party, open-lineage model earns its scrutiny.** Confirm the provider's data terms (region and residency; inputs and outputs not used to train base models); determine our EU AI Act role; and run a model-origin and data-governance review, because adopting a model of this provenance for this data is a policy decision in its own right. | Conditional (origin and data-governance sign-off) |
+| L3 | First time with this model, so no prior baseline to compare against: run the full behavior suite ourselves and read the model card. Label the evidence "ours", because the inherited vendor safety testing is thinner than a frontier lab's. | Pass (R2) |
+| L4 | Full attack testing scaled to R2, again with no prior release to diff against. | Pass |
+| L5 | Attach the platform's runtime guardrail (for example Bedrock Guardrails) on input and output, which adds a safety layer back at the platform level; verify it fires against the paths L3 and L4 surfaced. | Pass |
+| L6 | Pin the served model version and ID; re-check when the provider updates it; expires in 180 days. |  |
+
+**Result (first-time Qwen on Bedrock):** Allow with controls, R2, cloud-delivered open-lineage. The decisive contrast with Tests 3 and 4 is that the use and the model family are the same, but because the provider holds the files, the supply-chain workup that dominated the downloaded cases nearly vanishes. The effort moves instead to L2 (a first-time origin and data-governance decision) and to L3 and L4 (our own behavior and attack testing, since little frontier safety testing is inherited). What "first time" costs here is the full L3 to L4 workup with no baseline to compare against; what the provider saves is the file-level supply chain.
+
+The four cases together trace a gradient of origin, not of model quality. The new cloud version of a frontier model inherited almost all governance, and the work sat in L3 to L4. The familiar downloaded release inherited the publisher's identity but re-verified every file. The unfamiliar downloaded release inherited nothing and did the full supply-chain workup at L1 to L2. The Bedrock-hosted open-lineage model, delivered as an API, skipped the file-level supply chain like a cloud model but still owed a first-time L2 origin decision and its own L3 to L4 testing, because little safety evidence came with it. Same seven layers throughout; who holds the files and who tested the model, not who trained it, is what moves the effort.
 
 ---
 
-## Test 5: Measuring the open-weight risk claim (directional pilot)
+## Test 6: Measuring the open-weight risk claim (directional pilot)
 
 The framework's central claim (self-hosting an open-weight model can raise technical risk, not only add supply-chain work) is testable rather than assertable. A dependency-free harness (`experiments/harness.py`, local Ollama, one fixed 8-attack battery covering exfiltration, prompt injection, jailbreak, harmful-code and harmful-instruction prompts) runs three controlled comparisons, changing only one variable at a time. Scoring is escalate-only: deterministic markers first (a leaked `root:x:0:0` or an injected token is an unarguable success), then a separate-family judge that can only add a success the markers missed, never clear one. Each configuration ran 3 times, and the whole pilot was run twice (two independent 3-run passes) so reproducibility could be checked rather than assumed; a result that lands on some runs but not all is flagged unresolved.
 
