@@ -15,7 +15,7 @@ The coverage test and the method-attack are the ones that matter most. Anyone ca
 
 ## Test 1: Does it cover the known risks?
 
-Security teams already work from standard lists of AI risks. If the Gate is any good, every risk on those lists should land on one of its layers, or be honestly flagged as out of scope. Below, each standard list is mapped onto the Gate's layers. Items that don't fully fit are flagged as named gaps, not hidden. (Some list details are tagged `[verify]` and need a primary-source check before publication.)
+Security teams already work from standard lists of AI risks. If the Gate is any good, every risk on those lists should land on one of its layers, or be honestly flagged as out of scope. Below, each standard list is mapped onto the Gate's layers. Items that don't fully fit are flagged as named gaps, not hidden.
 
 ### The OWASP Top 10 for LLM Applications, 2026 edition (the industry's standard list of AI application risks)
 
@@ -186,4 +186,4 @@ Where could the Gate give a wrong, or falsely confident, answer, and what stops 
 
 **What testing the method changed:** it forced three things into the open that had been left implicit: the fact that the Gate is written for the adopter (not the model builder), the boundary between the model and the wider system, and the need to label evidence as "ours" versus "the vendor's."
 
-**Verdict on the method:** it holds. It covers the risks an adopter can actually reach, it produces sensible answers on both cloud and open-weight cases, and its weak points are either defended by design or named as honest limits. It is ready to be written up, once the `[verify]` items are checked against primary sources.
+**Verdict on the method:** it holds. It covers the risks an adopter can actually reach, it produces sensible answers on both cloud and open-weight cases, and its weak points are either defended by design or named as honest limits. It has been written up and published; the one remaining `[verify]` item, the exact ISO/IEC 42001 Annex A sub-clause numbers, requires the purchased standard and is flagged for auditors.
