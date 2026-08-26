@@ -1,0 +1,33 @@
+{
+  "model": "<model name and family, e.g. Qwen2.5-72B-Instruct>",
+  "version": "<exact served version or file hash; 'latest' is not valid>",
+  "origin": "cloud",
+  "modified": "no",
+  "use_case": "<what it does, for whom; one line>",
+  "rigor": "R1",
+  "regulatory_floor": "none",
+  "impact_assessment": null,
+  "layers": {
+    "L0": "pass",
+    "L1": "pass",
+    "L2": "pass",
+    "L3": "pass",
+    "L4": "pass",
+    "L5": "pass"
+  },
+  "overall": "allow",
+  "narrowed_use": null,
+  "evidence": [],
+  "guardrails": [],
+  "re_entry_log": [],
+  "scope_changes": [],
+  "risk_transfer_ref": null,
+  "risk_transfer_accepted": false,
+  "expires_date": "2027-01-01",
+  "expires_event": null,
+  "approved_by": "<name + role; must be independent of the requesting team for R3/R4>",
+  "incident_owner": null,
+  "retention": null,
+  "record_status": "append-only",
+  "record_signature": null
+}

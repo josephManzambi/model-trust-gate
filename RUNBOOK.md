@@ -137,14 +137,14 @@ Each layer ends in one verdict: **pass**, **conditional** (allowed once a named 
 - *Hard legal barrier that can't be met → stop. Fixable (contract/region) → conditional.*
 
 ### L3: Behavior (nobody attacking)
-- [ ] Run the behavior suite for this use (`promptfoo`, `DeepEval`): refusal correctness, bias, hallucination rate, instruction-following.
+- [ ] Run the behavior suite for this use (`promptfoo`, `DeepEval`): refusal correctness, bias, hallucination rate, instruction-following. Copy-and-edit starter: [`starters/promptfoo-behavior.yaml`](starters/promptfoo-behavior.yaml).
 - [ ] Read the model/system card; label inherited (vendor) vs produced (ours) evidence.
 - [ ] Frontier/dangerous-capability items: rely on vendor/safety-institute testing, labelled **inherited**, never re-run yourself.
 - [ ] **If the model was modified (quantized/fine-tuned/merged):** inherited *behavioural* evidence is void, re-test on the exact artifact you deploy, in tier order T3 → T1 → T2.
 - *Fundamentally unfit → stop. Containable weakness → conditional. Within tolerance → pass.*
 
 ### L4: Attack resistance
-- [ ] Red-team in the shape you'll deploy: jailbreaks, direct + indirect prompt injection, instruction/data leakage, and (agents) tool misuse (`garak`, `promptfoo`, `PyRIT`, `HarmBench`, `CyberSecEval`).
+- [ ] Red-team in the shape you'll deploy: jailbreaks, direct + indirect prompt injection, instruction/data leakage, and (agents) tool misuse (`garak`, `promptfoo`, `PyRIT`, `HarmBench`, `CyberSecEval`). Copy-and-edit starter: [`starters/garak-attack.sh`](starters/garak-attack.sh).
 - [ ] Scale to rigor: R1 smoke → R2 pipeline → R3 pipeline + targeted human red-team → R4 strong attacker + independent assessment.
 - [ ] **R3/R4 eval-integrity:** run under out-of-band monitoring (watch egress / privilege-escalation / non-task access), give the harness real sandbox egress control, and manually review trajectories, not just final answers.
 - [ ] Honesty rule: finding nothing is not proof of safety, only proof you may not have attacked hard enough.

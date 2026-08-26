@@ -12,19 +12,22 @@ It does not invent new controls. It composes standards that already exist and ar
 
 ## How to read this repo
 
-Start with the framework, then the validation. When you have an actual model to review, work from the runbook.
+Two paths, depending on why you are here.
 
-- **[FRAMEWORK.md](FRAMEWORK.md)**: the method. Executive summary, the seven-layer gate, Rigor Levels, and the Model Trust Record. **Start here.**
-- **[RUNBOOK.md](RUNBOOK.md)**: the method made runnable. A one-page intake, a triage that sets the scrutiny level, a fast track for low-stakes uses, effort sizing, a per-layer checklist, and default pass-bars. **Work from here when a team brings you a model.**
-- **[VALIDATION.md](VALIDATION.md)**: how the method holds up, via a coverage crosswalk against the standard risk lists, four worked adoption runs, and an attack on the method itself.
-- **[experiments/claim-verification.md](experiments/claim-verification.md)**: a protocol to empirically test the framework's central claim, that self-hosting an open-weight model relocates supply-chain risk onto the adopter.
+**Reviewing a model now (fastest path to a signed record):**
+
+1. **[QUICKSTART.md](QUICKSTART.md)**: the one-afternoon path, intake, triage, pick a track, run L3/L4, sign the record. **Start here if a team just handed you a model.**
+2. **[RUNBOOK.md](RUNBOOK.md)**: the full runnable method behind the quickstart, a one-page intake, triage, tracks, effort sizing, a per-layer checklist, and default pass-bars.
+3. The worked runbook closest to your case: **[hosted open-weight (Bedrock)](runbooks/bedrock-hosted-open-weight.md)** or **[fine-tuned open-weight](runbooks/fine-tuned-open-weight.md)**, each intake to signed record.
+4. **[starters/](starters/)**: copy-and-edit `promptfoo` (L3) and `garak` (L4) configs so the technical layers are runnable, not just described.
+5. **[templates/](templates/model-trust-record.md)**: the fillable record, a [blank template](templates/model-trust-record.template.json) to copy, the [JSON schema](templates/model-trust-record.schema.json) for policy-engine gating, and two filled examples ([hosted](templates/model-trust-record.bedrock-example.json), [fine-tuned](templates/model-trust-record.fine-tuned-example.json)).
+
+**Understanding or defending the method:**
+
+- **[FRAMEWORK.md](FRAMEWORK.md)**: the method in full, the seven-layer gate, Rigor Levels, and the Model Trust Record.
+- **[VALIDATION.md](VALIDATION.md)**: how it holds up, a coverage crosswalk, worked runs, and an attack on the method itself (optional for a first review).
+- **[experiments/claim-verification.md](experiments/claim-verification.md)**: the protocol behind the empirical pilot of the framework's central claim, that self-hosting an open-weight model relocates supply-chain risk onto the adopter.
 - **[standards-crosswalk.md](standards-crosswalk.md)**: the control-level backing, each layer mapped to ISO/IEC 42001 clauses and CSA AICM control IDs.
-
-### Run one
-
-- **[templates/model-trust-record.md](templates/model-trust-record.md)**: a fillable Model Trust Record (copy per adoption), with the [JSON schema](templates/model-trust-record.schema.json) for policy-engine gating and two filled-in examples: a [hosted open-weight run](templates/model-trust-record.bedrock-example.json) and a [fine-tuned open-weight run](templates/model-trust-record.fine-tuned-example.json).
-- **[runbooks/bedrock-hosted-open-weight.md](runbooks/bedrock-hosted-open-weight.md)**: a full worked run for the most common request, an open model (Qwen, Llama) served through a cloud provider like AWS Bedrock, from intake to signed record.
-- **[runbooks/fine-tuned-open-weight.md](runbooks/fine-tuned-open-weight.md)**: the other common case, an open model you fine-tuned in house on your own data. Shows why fine-tuning forks the trust object: reuse the base provenance, redo behavior and attack resistance from scratch.
 
 ## The idea in one screen
 
