@@ -67,15 +67,16 @@ First time with this family, so **no prior baseline to diff against**, run the f
 - [x] `promptfoo` / `DeepEval`: refusal correctness, bias, hallucination on in-scope questions, instruction-following. Met the R2 default bars (refusal ≥ 95%, hallucination ≤ 5%; see RUNBOOK pass-bars).
 - [x] Read the model card; label its safety testing **inherited (vendor's)** and note it is thinner than a frontier lab's, so weight your own "ours" evidence accordingly.
 
-### L4: Attack resistance → **pass**
+### L4: Attack resistance → **conditional (one residual finding, closed at L5)**
 - [x] Automated attack battery at **R2** strength (`garak`, `promptfoo`, `PyRIT`): jailbreaks, direct + indirect prompt injection (the injection surface matters for a doc-reading assistant), instruction/data leakage. No critical survived.
+- The one residual: **indirect prompt injection via document content (finding L4-F1).** No critical jailbreak survived, but a doc-reading assistant's injection surface is a real weakness, so it is carried as a **conditional** and closed by the L5 guardrail rather than left open. (This is why L4 is `conditional`, not `pass`: the honest verdict for "the model is fine, but only because a runtime control contains a specific finding.")
 - [x] Honesty rule recorded: a clean R2 run is not proof of safety, only that nothing critical survived testing at this strength.
 
 ### L5: Guardrails → **pass**
-- [x] Attach **Bedrock Guardrails** on input **and** output, this deliberately adds a runtime safety layer back at the platform level, the thing you would otherwise lose relative to a frontier vendor's built-in safety.
+- [x] Attach **Bedrock Guardrails** on input **and** output. This **closes L4-F1** (the indirect-injection finding) and deliberately adds a runtime safety layer back at the platform level, the thing you would otherwise lose relative to a frontier vendor's built-in safety.
 - [x] **Verify it fires** against the paths L3/L4 exercised (not merely that it is enabled). Version it (`gr-bedrock-guardrail-io` v1) and record the re-test date.
 
-Because a production control is deployed, the overall verdict is **Allow with controls**, not a bare Allow.
+Because L4 carried a conditional (the indirect-injection finding L4-F1) that this L5 control verifiably closes, the overall verdict is **Allow with controls**, not a bare Allow. (If L4 had been a clean `pass` with no finding, the verdict would be a bare **Allow** and this defense-in-depth guardrail would be noted separately; the total rule keys "Allow with controls" on a conditional that a control closes.)
 
 ### L6: Upkeep → recorded
 - [x] Pin the served model id and version.
@@ -101,9 +102,9 @@ Modified:         no
 Use case:         Internal knowledge assistant over internal docs; read-only, cannot act
 Scrutiny level:   R2      Regulatory floor: none
 Impact assessment: ISO 42001 AISIA AISEC-611; no FRIA (Art. 27 does not apply)
-Per-layer result: L0 pass · L1 pass · L2 pass · L3 pass · L4 pass · L5 pass
+Per-layer result: L0 pass · L1 pass · L2 pass · L3 pass · L4 conditional · L5 pass
 Overall:          Allow with controls
-Controls added:   Bedrock Guardrails on input+output (gr-bedrock-guardrail-io v1), verified to fire
+Controls added:   Bedrock Guardrails on input+output (gr-bedrock-guardrail-io v1), closes L4-F1, verified to fire
                   against the paths L3/L4 exercised.
 Evidence:         L1 AWS SOC 2 / ISO 27001 (vendor's); L2 first-time origin + data-governance
                   sign-off (ours); L3 behavior scorecard (ours, T2) + model card (vendor's, inherited);

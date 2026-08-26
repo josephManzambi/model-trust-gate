@@ -11,8 +11,8 @@
     "L0": "pass",
     "L1": "pass",
     "L2": "pass",
-    "L3": "pass",
-    "L4": "pass",
+    "L3": "conditional",
+    "L4": "conditional",
     "L5": "pass"
   },
   "overall": "allow_with_controls",

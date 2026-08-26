@@ -83,7 +83,7 @@
         "properties": {
           "id": { "type": "string" },
           "config_version": { "type": "string" },
-          "closes": { "type": "string", "description": "The L3/L4 finding id this control closes, e.g. 'L4-F1'." },
+          "closes": { "type": "string", "description": "The L3/L4 finding id(s) this control closes, e.g. 'L4-F1' (list multiple in one string if the control closes several)." },
           "last_retest": { "type": "string", "format": "date" }
         }
       }

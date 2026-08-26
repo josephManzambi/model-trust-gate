@@ -12,7 +12,7 @@
     "L1": "pass",
     "L2": "pass",
     "L3": "pass",
-    "L4": "pass",
+    "L4": "conditional",
     "L5": "pass"
   },
   "overall": "allow_with_controls",
@@ -22,10 +22,10 @@
     { "layer": "L2", "source": "ours", "tier": null, "valid": true, "ref": "First-time origin + data-governance sign-off; Bedrock data terms (in-region, inputs/outputs not used to train base models) confirmed (AISEC-611)" },
     { "layer": "L3", "source": "ours", "tier": "T2", "valid": true, "ref": "Behavior suite scorecard, run on the Bedrock-served model; no prior baseline to diff (AISEC-611)" },
     { "layer": "L3", "source": "vendor's", "tier": "T1", "valid": true, "ref": "Model card; inherited safety testing labelled thin vs a frontier lab's" },
-    { "layer": "L4", "source": "ours", "tier": "T3", "valid": true, "ref": "Automated attack suite at R2 strength; no critical survived (AISEC-611)" }
+    { "layer": "L4", "source": "ours", "tier": "T3", "valid": true, "ref": "Automated attack suite at R2 strength; no critical survived; residual indirect-injection finding L4-F1 carried as a conditional, closed at L5 (AISEC-611)" }
   ],
   "guardrails": [
-    { "id": "gr-bedrock-guardrail-io", "config_version": "1", "closes": "defense-in-depth (input+output; verified against the paths L3/L4 exercised)", "last_retest": "2026-08-25" }
+    { "id": "gr-bedrock-guardrail-io", "config_version": "1", "closes": "L4-F1 (indirect prompt injection via document content); verified to fire against the injection paths L4 exercised, input and output", "last_retest": "2026-08-25" }
   ],
   "re_entry_log": [],
   "scope_changes": [],

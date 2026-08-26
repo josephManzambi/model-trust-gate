@@ -290,7 +290,7 @@ The policy is not the trivial `deny if overall == "deny"` (that just echoes a fi
 
 ```
 deny if some L in input.layers; input.layers[L] == "stop"
-deny if input.layers["L4"] == "conditional"; count(guardrails that close an L4 finding) == 0
+deny if some L in input.layers; input.layers[L] == "conditional"; count(guardrails that close a finding from L) == 0
 deny if input.overall == "restrict" and input.narrowed_use == null
 deny if time.now > input.expires_date
 deny if input.risk_transfer_ref != null and not input.risk_transfer_accepted
@@ -354,7 +354,7 @@ The order is the whole point. The cheap checks protect the expensive ones from b
 
 This version adds the recursive triggers, tiered evidence, the Exit Gate, and the policy-engine-ready record. It is still not a full turnkey runbook, and it names what it lacks rather than implying completeness:
 
-- **Operational depth.** The record names an approver and an incident owner, but there is no per-layer RACI, no numeric pass-bars for the L3/L4 tests, no one-page fast-track form for R1/R2, no effort sizing, and no stated fallback for teams that cannot build out-of-band eval monitoring at R3/R4 (outsource, accept documented residual, or hard-stop).
+- **Operational depth.** The RUNBOOK now supplies the one-page intake and fast-track form, the effort sizing, and default numeric pass-bars for the L3/L4 tests. Still open: a per-layer RACI, and a stated fallback for teams that cannot build out-of-band eval monitoring at R3/R4 (outsource, accept documented residual, or hard-stop).
 - **Compliance artifacts.** L2 now names the AI System Impact Assessment, the FRIA (with its actual Art. 27 trigger and the Art. 27(4) DPIA-reuse route), the provider-status threshold and its Art. 43/49/18 consequences, and the subprocessor chain; the record carries an incident-notification owner and a retention floor. Still missing: an explicit GDPR records-of-processing (Art. 30) hook, and a maintained mapping of Article 73 serious-incident deadlines by jurisdiction.
 - **Stronger evidence.** The claim-verification harness is a directional pilot on small local models, not a definitive measurement.
 
