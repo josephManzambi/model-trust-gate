@@ -2,7 +2,7 @@
 
 *The framework tells you **what** the Gate decides and **why**. This runbook is the part you actually run when a team shows up with a model: a one-page intake, a triage that sets the scrutiny level, a fast track for low-stakes uses, rough effort sizing, and a per-layer checklist of what to do at each gate. Fill in a [Model Trust Record](templates/model-trust-record.md) as you go.*
 
-**Read [FRAMEWORK.md](FRAMEWORK.md) once for the method. Then work from this file.** For the most common case, an open model served through a cloud provider (Qwen or Llama on Bedrock and the like), there is a fully worked example in [runbooks/bedrock-hosted-open-weight.md](runbooks/bedrock-hosted-open-weight.md).
+**Read [FRAMEWORK.md](FRAMEWORK.md) once for the method. Then work from this file.** For the most common case, an open model served through a cloud provider (Qwen or Llama on Bedrock and the like), there is a fully worked example in [runbooks/bedrock-hosted-open-weight.md](runbooks/bedrock-hosted-open-weight.md). For the other common case, an open model you fine-tuned in house, see [runbooks/fine-tuned-open-weight.md](runbooks/fine-tuned-open-weight.md).
 
 The runbook adds nothing to the method. It only makes it runnable: it turns the seven layers into a form you fill and a checklist you tick, and it supplies **default pass-bars** the framework deliberately leaves open (see the note at the end).
 

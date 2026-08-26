@@ -24,6 +24,7 @@ Start with the framework, then the validation. When you have an actual model to 
 
 - **[templates/model-trust-record.md](templates/model-trust-record.md)**: a fillable Model Trust Record (copy per adoption), with the [JSON schema](templates/model-trust-record.schema.json) for policy-engine gating and a [filled-in example](templates/model-trust-record.bedrock-example.json).
 - **[runbooks/bedrock-hosted-open-weight.md](runbooks/bedrock-hosted-open-weight.md)**: a full worked run for the most common request, an open model (Qwen, Llama) served through a cloud provider like AWS Bedrock, from intake to signed record.
+- **[runbooks/fine-tuned-open-weight.md](runbooks/fine-tuned-open-weight.md)**: the other common case, an open model you fine-tuned in house on your own data. Shows why fine-tuning forks the trust object: reuse the base provenance, redo behavior and attack resistance from scratch.
 
 ## The idea in one screen
 
