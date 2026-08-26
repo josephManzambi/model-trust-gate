@@ -97,7 +97,7 @@ The model gate judged the model. Handed to the system review (RTD-742): the **ag
 
 ## The result
 
-**Allow with controls · R3 · downloaded open-weight, fine-tuned.** The human-readable record:
+**Allow with controls · R3 · downloaded open-weight, fine-tuned.** The full signed record is [`templates/model-trust-record.fine-tuned-example.json`](../templates/model-trust-record.fine-tuned-example.json) (same shape as [`model-trust-record.schema.json`](../templates/model-trust-record.schema.json)); the human-readable form:
 
 ```
 Model Trust Record

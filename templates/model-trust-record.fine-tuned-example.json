@@ -1,0 +1,41 @@
+{
+  "model": "Qwen2.5-7B-Instruct, fine-tuned in house (LoRA SFT on internal support data)",
+  "version": "base qwen2.5-7b-instruct @ <base sha256> + adapter ft-support-2026-08 @ <adapter sha256> + dataset support-hist-2026-07 @ <dataset id>; pinned 2026-08-26",
+  "origin": "downloaded-open-weight",
+  "modified": "fine-tuned",
+  "use_case": "Drafts replies to customer support tickets; a human agent approves each draft before it is sent. Never sends.",
+  "rigor": "R3",
+  "regulatory_floor": "GDPR (personal data in the training set and at inference); not EU AI Act Annex III high-risk",
+  "impact_assessment": "ISO 42001 AISIA ref AISEC-742; GDPR lawful-basis + right-to-erasure mitigation recorded; no FRIA (not Annex III)",
+  "layers": {
+    "L0": "pass",
+    "L1": "pass",
+    "L2": "pass",
+    "L3": "pass",
+    "L4": "pass",
+    "L5": "pass"
+  },
+  "overall": "allow_with_controls",
+  "narrowed_use": null,
+  "evidence": [
+    { "layer": "L1", "source": "vendor's", "tier": null, "valid": true, "ref": "Base model provenance (reused): publisher verified, base weights sha256 pinned, license retrieved, format/malware scan on the downloaded base" },
+    { "layer": "L1", "source": "ours", "tier": null, "valid": true, "ref": "New supply chain from fine-tuning: training-data provenance and poisoning review, fine-tuning pipeline/base-image integrity, output artifact hash; base-hash -> dataset-id -> adapter-hash recorded as one lineage (AISEC-742)" },
+    { "layer": "L2", "source": "ours", "tier": null, "valid": true, "ref": "Data-protection + model-ownership sign-off; EU AI Act role recorded as provider (model modified); GDPR lawful basis for training + right-to-erasure mitigation (train on de-identified data, documented retention, re-train-to-forget) (AISEC-742)" },
+    { "layer": "L3", "source": "ours", "tier": "T3", "valid": true, "ref": "Full behavior re-test on the fine-tuned artifact at R3 bars (refusal >= 98% zero-crit, hallucination <= 2%); base-vs-fine-tuned delta for capability regression; training-data memorization/extraction probe (AISEC-742)" },
+    { "layer": "L4", "source": "ours", "tier": "T3", "valid": true, "ref": "R3 attack battery incl. human red-team pass; jailbreak/injection/leakage/extraction; base-vs-fine-tuned alignment-erosion diff; no critical survived (AISEC-742)" }
+  ],
+  "guardrails": [
+    { "id": "gr-support-io", "config_version": "1", "closes": "L4-F1 (ticket-body prompt injection) and L3-F1 (customer-PII exfiltration in drafts); verified to fire against the L3/L4 extraction and injection paths", "last_retest": "2026-08-26" }
+  ],
+  "re_entry_log": [],
+  "scope_changes": [],
+  "risk_transfer_ref": "RTD-742",
+  "risk_transfer_accepted": true,
+  "expires_date": "2026-11-24",
+  "expires_event": "the base model ships a safety fix (not inherited until we re-fine-tune), or we retrain on new data",
+  "approved_by": "A. Okafor, AI Security reviewer (independent of the requesting team)",
+  "incident_owner": "SOC on-call; GDPR breach path if customer data leaks, notify within the Art. 33 deadline",
+  "retention": "3 years; training set retained under the recorded data-protection basis (EU AI Act Art. 18 floor applies once provider status attaches)",
+  "record_status": "append-only",
+  "record_signature": "<detached signature over the canonicalized record>"
+}
