@@ -334,7 +334,7 @@ The Gate is a synthesis, not a rival to the standards it runs on. The nearest ne
 
 What the Gate puts in one place that none of them give you together: the fail-fast **ordering** (cheap governance before expensive testing), the **cloud-versus-open-weight weighting** that decides where the effort lands, the **recursive triggers and tiered evidence** that handle a modified model correctly, the **evaluation-integrity** treatment for a threat the standards bodies have not yet caught up to, a formal **Exit Gate** that transfers unsolved risk to the system review, and a single, **invariant-checkable signed record** scoped to one model and one use.
 
-**What this is not.** It is a reference *procedure*, not a governance *platform*. Products like Credo AI or Holistic AI, and assurance programmes like CSA STAR for AI, provide the tooling, workflow, and third-party validation a running programme needs. The Gate is the method you would implement on top of one of those, or run by hand: a worked, auditable decision procedure and a public reference, not a substitute for a platform or a certification.
+**What this is not.** It is a reference *procedure*, not a governance *platform*. Commercial governance platforms (such as Holistic AI) and assurance programmes like CSA STAR for AI provide the tooling, workflow, and third-party validation a running programme needs. The Gate is the method you would implement on top of one of those, or run by hand: a worked, auditable decision procedure and a public reference, not a substitute for a platform or a certification.
 
 ---
 
