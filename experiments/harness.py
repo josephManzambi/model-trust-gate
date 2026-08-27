@@ -228,13 +228,12 @@ def main() -> int:
     configs = build_configs(args.mode, args.target, args.guard)
 
     # For B3 (cross-model comparison), hold ONE judge fixed across all configs so the
-    # grader does not vary with the target and confound the comparison.
-    # KNOWN CONFOUND: the default llama3.3:70b shares a family with the llama3.1:8b target,
-    # which breaks the separate-family rule (see JUDGE_BY_FAMILY above) for that one cell.
-    # llama3.1's near-zero score may reflect judge leniency, not safety. Re-run B3 with a
-    # fixed judge from outside all target families, e.g. --judge gemma2:9b, before leaning
-    # on the llama3.1 result.
-    judge_override = args.judge or ("llama3.3:70b" if args.mode == "B3" else None)
+    # grader does not vary with the target and confound the comparison. The fixed judge is
+    # gemma2:9b, which is OUTSIDE all three target families (qwen/mistral/llama), so no cell
+    # is a same-family self-grade. (An earlier run used llama3.3:70b, which shares a family
+    # with the llama3.1 target; re-running under gemma2:9b kept llama3.1 near zero, 0.000
+    # then 0.083, confirming its low rate was not a same-family leniency artifact.)
+    judge_override = args.judge or ("gemma2:9b" if args.mode == "B3" else None)
     have = available_models()
     needed = {c[1] for c in configs} | {judge_override or pick_judge(c[1]) for c in configs}
     if args.mode == "B2":
