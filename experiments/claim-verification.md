@@ -40,7 +40,7 @@ Run the same audit across **three or four different open-weight models** of simi
 
 ## What a clean result set buys you
 
-- If B1, B2, and B3 show measurable effects, they refute the original overstated line ("no added technical risk") and support the corrected one (open-weight adds supply-chain work and can raise technical risk). The correction is then evidenced rather than only argued. Treat the result as a **directional pilot, not a definitive measurement**: with a small fixed battery and few runs it shows the direction and rough size of an effect, not a precise rate, and any result that flips between runs is unresolved. That is still exactly the step-2 technical assessment in the study-then-assess-then-publish pipeline, provided it is reported with that honesty.
+- If B1, B2, and B3 show measurable effects, they weigh against the original overstated line ("no added technical risk") and are directionally consistent with the corrected one (open-weight adds supply-chain work and can raise technical risk). The correction is then evidenced rather than only argued. Treat the result as a **directional pilot, not a definitive measurement**: with a small fixed battery and few runs it shows the direction and rough size of an effect, not a precise rate, and any result that flips between runs is unresolved. That is still exactly the step-2 technical assessment in the study-then-assess-then-publish pipeline, provided it is reported with that honesty.
 - If they show no effect, that is also worth knowing, and would push the wording back toward the stronger original claim.
 
 ## Running the tests
