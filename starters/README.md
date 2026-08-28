@@ -28,6 +28,14 @@ A clean run means **nothing critical survived at this strength**, not that the m
 
 Where a starter uses a model to grade another model (the L3 rubric), pick a grader from a **different model family** than the target, so a model is not effectively grading itself. The pilot harness (`../experiments/harness.py`) documents the same rule and a known confound when it is broken.
 
+## Agentic testing (the L4 sub-track)
+
+When the model *acts* (tools, memory, multi-step autonomy), generic prompt-injection testing is not enough. Agentic tests are specific to your agent's tools and environment, so this is guidance, not a drop-in config (see the L4 agentic sub-track in [`../FRAMEWORK.md`](../FRAMEWORK.md)):
+
+- **AgentDojo** runs prompt-injection attacks and defenses against tool-using agents. Point it at your agent's tool set to exercise indirect goal hijack and tool misuse. `[verify: AgentDojo's repository URL and current scope, against the project's own README]`
+- **The author's `ai-redteam-orchestrator` MCP layer** checks MCP tool servers for supply-chain and tool-description risks.
+- Cover the five classes from the sub-track: indirect goal hijack, tool misuse, memory and context poisoning, privilege abuse and confused deputy, and excessive agency. Record agent-level findings separately and hand them to the Exit Gate.
+
 ## Install
 
 ```bash

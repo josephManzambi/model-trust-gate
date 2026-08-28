@@ -145,6 +145,7 @@ Each layer ends in one verdict: **pass**, **conditional** (allowed once a named 
 
 ### L4: Attack resistance
 - [ ] Red-team in the shape you'll deploy: jailbreaks, direct + indirect prompt injection, instruction/data leakage, and (agents) tool misuse (`garak`, `promptfoo`, `PyRIT`, `HarmBench`, `CyberSecEval`). Copy-and-edit starter: [`starters/garak-attack.sh`](starters/garak-attack.sh).
+- [ ] **If the model acts (tools / memory / multi-step autonomy), run the agentic sub-track** (see FRAMEWORK.md L4): indirect goal hijack via tool output (ASI01), tool misuse under adversarial framing (ASI02), memory/context poisoning (ASI06), privilege abuse / confused deputy (ASI03), excessive agency (ASI03 / ASI10). Flag agent-level and multi-agent findings and hand them to the Exit Gate. Tools and guidance: [`starters/README.md`](starters/README.md).
 - [ ] Scale to rigor: R1 smoke → R2 pipeline → R3 pipeline + targeted human red-team → R4 strong attacker + independent assessment.
 - [ ] **R3/R4 eval-integrity:** run under out-of-band monitoring (watch egress / privilege-escalation / non-task access), give the harness real sandbox egress control, and manually review trajectories, not just final answers.
 - [ ] Honesty rule: finding nothing is not proof of safety, only proof you may not have attacked hard enough.
