@@ -75,7 +75,7 @@ The single most useful idea in this whole document: **downloading and self-hosti
 
 The scrutiny a use deserves comes from **four drivers**. You take the highest level any single driver reaches, not an average: a use that is R4 on any one driver is R4.
 
-Two drivers come straight from the AWS / CSA Agentic AI Security Scoping Matrix `[verify: exact source, title and scope definitions of this agentic scoping matrix; it must not be conflated with the AWS Generative AI Security Scoping Matrix, whose Scopes 1-5 are ownership/deployment tiers, not autonomy levels]`, which separates two things people often blur:
+The drivers:
 
 - **Autonomy: how independently it acts.** The Scope 1 to 4 ladder, set by how much a human stays in the loop:
   - **Scope 1, no agency:** read-only, human-initiated, it can't change anything.
