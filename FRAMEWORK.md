@@ -105,10 +105,8 @@ Your Rigor Level is the highest level reached by any of the four:
 
 Two rules keep this honest:
 
-- **A regulatory floor sits on top of the four drivers.** Some uses are high-risk by law regardless of how they score. A CV-screening model is Scope 1 and read-only, but the EU AI Act classifies it high-risk, so it is at least R4. The impact driver catches most such cases on its own; the floor is the backstop for anything the drivers miss.
+- **A regulatory floor sits on top of the four drivers.** Some uses are high-risk by law regardless of how they score. A CV-screening model is Scope 1 and read-only, but the EU AI Act classifies it high-risk, so it is an R4. The impact driver catches most such cases on its own; the floor is the backstop for anything the drivers miss.
 - **Rigor is set at L0, but it is not frozen.** If Layers 3 or 4 reveal a capability the intake could not see (for example, the model emits links a downstream service will fetch, or can reach a tool you had not scoped), re-open L0 and raise the level. The intake sets the strength of the later tests, so a capability discovered later must be allowed to raise it.
-
-Why reuse the AWS/CSA matrix rather than invent a scale: it is a published standard (AWS defined it, CSA enhanced it into a multi-dimensional version), it separates autonomy from agency cleanly, and where your organization already scopes agents this way, the Gate reads from a call your teams already make.
 
 The Rigor Level belongs to the *use*, not the model. The same model can be R1 in one deployment and R4 in another.
 
