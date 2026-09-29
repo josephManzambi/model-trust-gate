@@ -1,0 +1,59 @@
+<!doctype html>
+<!-- Source for model-trust-gate-diagram.png. Re-render at 1280px wide:
+     "Google Chrome" --headless --hide-scrollbars --window-size=1280,1560 \
+       --screenshot=model-trust-gate-diagram.png model-trust-gate-diagram.html -->
+<html><head><meta charset="utf-8"><title>The Model Trust Gate</title><style>
+*{box-sizing:border-box;margin:0}
+html,body{width:1280px;height:1560px;background:#f4f4f4}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#141414;padding:44px 56px}
+h1{font-size:42px;letter-spacing:-.3px}
+.sub{font-size:22px;color:#444;margin:10px 0 24px}
+.dial{background:#fff;border:2px solid #9a9a9a;border-radius:14px;padding:16px 28px;margin-bottom:12px}
+.dial b{display:block;color:#3b82e0;font-size:22px;margin-bottom:6px}
+.dial span{font-size:19px;color:#333}
+.flow{position:relative;margin:30px 0 0 64px;width:800px}
+.row{position:relative;background:#fff;border:2.5px solid #161616;border-radius:14px;height:92px;display:flex;align-items:center;padding:0 24px;gap:22px;margin-bottom:16px}
+.b{flex:0 0 52px;height:52px;border-radius:50%;background:#161616;color:#fff;font-weight:700;font-size:21px;display:flex;align-items:center;justify-content:center}
+.t{font-weight:700;font-size:25px}.s{font-size:20px;color:#444;margin-top:6px}
+.row:not(:last-child)::after{content:"";position:absolute;left:386px;bottom:-24px;border-left:15px solid transparent;border-right:15px solid transparent;border-top:20px solid #2e9e5b;z-index:2}
+.row::before{content:"";position:absolute;right:-54px;top:45px;width:52px;border-top:2px dashed #e04a4a}
+.stopline{position:absolute;left:852px;top:45px;height:707px;border-left:3px solid #e04a4a}
+.stophead{position:absolute;left:842px;top:752px;border-left:12px solid transparent;border-right:12px solid transparent;border-top:18px solid #e04a4a}
+.stoplabel{position:absolute;left:866px;top:360px;color:#e04a4a;font-weight:700;font-size:20px}
+.passlabel{position:absolute;left:418px;top:94px;color:#2e9e5b;font-weight:700;font-size:17px}
+.ends{display:flex;gap:40px;margin:30px 0 0 64px}
+.rec{width:500px;background:#161616;color:#fff;border-radius:14px;padding:22px;text-align:center}
+.rec b{font-size:26px}.rec span{display:block;color:#ccc;font-size:19px;margin-top:8px}
+.stop{width:500px;background:#fff;border:2.5px solid #e04a4a;border-radius:14px;padding:18px;text-align:center}
+.stop b{color:#e04a4a;font-size:26px}.stop span{display:block;font-size:19px;color:#333;margin-top:6px}
+.legend{background:#fff;border:2px solid #9a9a9a;border-radius:14px;padding:26px 32px;margin-top:36px}
+.legend h3{font-size:21px;margin-bottom:16px}
+.legend p{font-size:20px;margin:12px 0;color:#222}
+.dot{display:inline-block;width:18px;height:18px;border-radius:50%;margin-right:18px;vertical-align:-2px}
+.g{color:#2e9e5b;font-weight:700}.a{color:#d4901c;font-weight:700}.r{color:#e04a4a;font-weight:700}
+</style></head><body>
+<h1>The Model Trust Gate</h1>
+<div class="sub">Seven ordered checks. Cheap and administrative first, expensive and technical last.</div>
+<div class="dial"><b>DIAL 1: RIGOR (how hard you look)</b><span>R1 to R4, set at L0 by the riskiest single driver; raised if L3 or L4 finds more.</span></div>
+<div class="dial"><b>DIAL 2: ORIGIN (where the extra effort lands)</b><span>Every model gets behaviour + attack testing (L3, L4). Open-weight adds supply chain + legal (L1, L2).</span></div>
+<div class="flow">
+  <div class="row"><div class="b">L0</div><div><div class="t">Set the stakes</div><div class="s">Classify the use, set the Rigor Level</div></div></div>
+  <div class="row"><div class="b">L1</div><div><div class="t">Provenance</div><div class="s">Where it came from; can you trust the files</div></div></div>
+  <div class="row"><div class="b">L2</div><div><div class="t">Permission</div><div class="s">Allowed to use it, and provable to a regulator</div></div></div>
+  <div class="row"><div class="b">L3</div><div><div class="t">Behavior</div><div class="s">With nobody attacking, is it good enough</div></div></div>
+  <div class="row"><div class="b">L4</div><div><div class="t">Attack resistance</div><div class="s">Does it hold when someone tries to abuse it</div></div></div>
+  <div class="row"><div class="b">L5</div><div><div class="t">Guardrails</div><div class="s">What you wrap around it in production</div></div></div>
+  <div class="row"><div class="b">L6</div><div><div class="t">Upkeep</div><div class="s">Set the expiry and what forces a re-check</div></div></div>
+  <div class="stopline"></div><div class="stophead"></div><div class="stoplabel">stop</div><div class="passlabel">pass</div>
+</div>
+<div class="ends">
+  <div class="rec"><b>Model Trust Record</b><span>one model, one use: scoped, dated, signed</span></div>
+  <div class="stop"><b>STOP = DENY</b><span>a stop at any gate ends it;<br>skip the rest, record why</span></div>
+</div>
+<div class="legend">
+  <h3>At each gate (L0 to L5), one of three outcomes:</h3>
+  <p><i class="dot" style="background:#2e9e5b"></i><span class="g">PASS</span> continue to the next check</p>
+  <p><i class="dot" style="background:#d4901c"></i><span class="a">CONDITIONAL</span> continue once a named fix lands (an L5 control, or a sign-off at L1/L2)</p>
+  <p><i class="dot" style="background:#e04a4a"></i><span class="r">STOP</span> end the sequence, and record why</p>
+</div>
+</body></html>
