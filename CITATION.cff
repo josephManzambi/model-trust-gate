@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use or adapt the Model Trust Gate, please cite it as below."
+title: "The Model Trust Gate: a fail-fast gate for deciding whether to adopt an AI model for one specific use"
+type: software
+authors:
+  - family-names: Manzambi
+    given-names: Joseph
+version: 0.2.1
+date-released: 2026-09-29
+license: MIT
+repository-code: "https://github.com/josephManzambi/model-trust-gate"
+url: "https://www.manzambi.com/writing/model-trust-gate/"
+keywords:
+  - ai-security
+  - ai-governance
+  - model-risk
+  - nist-ai-rmf
+  - iso-42001
+  - eu-ai-act

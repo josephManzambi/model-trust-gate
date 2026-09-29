@@ -34,7 +34,7 @@ The 2026 edition (published August 2026) reorders the list from 2025: Excessive 
 | LLM09 Vector & embedding weaknesses | **partial** | This lives in the knowledge-base layer; see gap G1 |
 | LLM10 Improper output handling | L5 | A runtime control |
 
-**Result:** 8 of 10 handled directly, 2 partial (LLM05 poisoning and LLM09 vector/embedding). Nothing falls through unnoticed.
+**Result:** 8 of 10 handled directly, 2 partial (LLM05 poisoning and LLM09 vector/embedding). The two partial items are named as gaps G1 and G2 below.
 
 ### MITRE ATLAS (the standard catalogue of how attackers target AI)
 
@@ -42,7 +42,7 @@ Its attacker tactics concentrate at **L4** (the attack-testing layer), with the 
 
 ### CSA AI Controls Matrix (the control checklist that pairs with the EU AI Act and ISO 42001)
 
-Its governance, risk, supply-chain and compliance domains line up with the Gate's governance layers (**L0 to L2**). In effect, the Gate's governance layers operationalize the governance, supply-chain and compliance domains of AICM into a sequential decision. They are not a full implementation of AICM v1.1 (which spans 247 control objectives across 18 domains, and a shared-responsibility model across provider/orchestrator/adopter; v1.1 added the Model Development Security domain over v1.0's 243 controls); the Gate consumes the relevant parts of AICM as evidence rather than reproducing the whole matrix.
+Its governance, risk, supply-chain and compliance domains line up with the Gate's governance layers (**L0 to L2**). In effect, the Gate's governance layers operationalize the governance, supply-chain and compliance domains of AICM into a sequential decision. They are not a full implementation of AICM v1.1 (which spans 247 control objectives across 18 domains, and a shared-responsibility model across provider/orchestrator/adopter; v1.1 added 4 controls over v1.0's 243 by syncing with CCM v4.1, still 18 domains); the Gate consumes the relevant parts of AICM as evidence rather than reproducing the whole matrix.
 
 ### NIST's generative-AI risk categories
 
@@ -52,15 +52,15 @@ NIST AI 600-1 (the Generative AI Profile, July 2024) names 12 risk categories. E
 |---|---|
 | CBRN Information or Capabilities | L3, *inherited from vendor/safety-institute testing* (gap G3), never re-run by the adopter |
 | Confabulation | L3 (the "makes things up" dimension) |
-| Dangerous, Violent or Hateful Content | L3 (behavior) + L5 (output filter) |
+| Dangerous, Violent, or Hateful Content | L3 (behavior) + L5 (output filter) |
 | Data Privacy | L2 (data rules) + L4 (leak testing) + L5 (output filter) |
 | Environmental Impacts | **Out of scope.** The Gate is a trust and security decision, not a sustainability assessment; named here rather than silently dropped |
-| Harmful Bias and Homogenization | L3 |
+| Harmful Bias or Homogenization | L3 |
 | Human-AI Configuration | L5 (guardrails), with the system-level share handed to a separate review (gap G1) |
 | Information Integrity | L3 |
 | Information Security | L4 |
 | Intellectual Property | L1 (provenance/licence) + L2 (use rules) |
-| Obscene or Degrading Content | L3 (behavior) + L5 (output filter) |
+| Obscene, Degrading, and/or Abusive Content | L3 (behavior) + L5 (output filter) |
 | Value Chain and Component Integration | L1 (supply chain) |
 
 11 of 12 land on a layer; Environmental Impacts is out of scope by design and flagged as such. The catastrophic-capability category (CBRN) lands at L3 but is inherited from the vendor's or a safety institute's testing, not reproduced by the adopter (see gap G3).
@@ -86,7 +86,7 @@ These three are not defects to patch. They are the honest edge of a framework wr
 | L2 | Obligations already mapped from the prior version; just check for changed data terms. | Pass |
 | L3 | Run our own behavior tests; read the new model card for changes. Notice it now over-refuses two legitimate support requests. | Conditional (fix at L5) |
 | L4 | Re-run the attack tests against the agent. Find one hidden-instruction path through a tool's output. | Conditional (fix at L5) |
-| L5 | Add: separate instructions from tool data, restrict the affected tool, retune the two over-refusals. Verify each fix works. | Pass |
+| L5 | Add: separate instructions from tool data, restrict the affected tool, retune the two over-refusals. Verify each fix drops its finding below the R3 bar, not merely that it fires. | Pass |
 | L6 | Pin this version; re-check on the next version; expires in 90 days. |  |
 
 **Result:** Allow with controls, R3, cloud. Almost all the work sat in L3 to L4, exactly as a cloud model should. Time taken: days, not weeks, because the governance was inherited from the prior version.
@@ -102,14 +102,14 @@ These three are not defects to patch. They are the honest edge of a framework wr
 | L0 | Internal, some sensitive data, cannot act on its own. Stakes: **R2**. Origin: downloaded open-weight. | Pass (R2) |
 | L1 | Files ship in the unsafe format, not the safe one; the publisher's repo isn't signed; the licence restricts commercial use. Run the malware scan. | **This is where the Gate earns its keep** |
 |  | *Case A:* the scan finds a malicious payload that would run on load. **Stop, return the model.** No behavior or attack testing spent on files we will never load. | Deny |
-|  | *Case B:* the scan is clean, but the licence restricts our use. **Conditional:** proceed only with legal sign-off; convert to the safe file format and pin the exact file hash. | Conditional |
+|  | *Case B:* the scan is clean, but the licence restricts our use. **Conditional:** proceed only with legal sign-off; convert to the safe file format and pin the exact file hash. Once the sign-off lands, L1 is recorded pass. | Conditional, then pass |
 | L2 | Self-hosted, so data-location rules are easy to meet (a genuine open-weight advantage); record the licence fix. | Pass |
 | L3 | Behavior test the exact copy we will run; note that the compressed version we host may behave differently from the original. | Pass (R2) |
 | L4 | Automated attack testing for an R2 use. | Pass |
-| L5 | Add an output filter on what the assistant can send out; verify it fires. | Pass |
+| L5 | Add an output filter on what the assistant can send out, as defense in depth (no L3/L4 finding to close). | Pass |
 | L6 | Pin the file hash; re-check if we re-compress or swap the model; expires in 180 days. |  |
 
-**Result (Case B):** Allow with controls, R2, open-weight. Almost all the work sat in L1 to L2, exactly as a downloaded model should. The decisive value was stopping early: in Case A the Gate halted at L1 and never wasted attack-testing effort on a model it was always going to reject. That single row is the argument for checking governance before doing technical work, and the argument for the whole method in one line.
+**Result (Case B):** Allow, R2, open-weight (the licence conditional was closed by legal sign-off at L1; the output filter is defense in depth, not the closure of a finding). Almost all the work sat in L1 to L2, exactly as a downloaded model should. The decisive value was stopping early: in Case A the Gate halted at L1 and never wasted attack-testing effort on a model it was always going to reject. That single row is the argument for checking governance before doing technical work, and the argument for the whole method in one line.
 
 ---
 
@@ -120,14 +120,14 @@ These three are not defects to patch. They are the honest edge of a framework wr
 | Layer | What happens | Result |
 |---|---|---|
 | L0 | Same internal use, some sensitive data, cannot act. Stakes: **R2**. Origin: downloaded open-weight. | Pass (R2) |
-| L1 | We already trust the publisher's identity, so that part is quick. But we still scan **this** new file and **re-read the licence**, and the new release has quietly added a use restriction the old one lacked. Trust is in the file and the release, not the publisher's name. | Conditional (licence change, legal sign-off) |
+| L1 | We already trust the publisher's identity, so that part is quick. But we still scan **this** new file and **re-read the licence**, and the new release has quietly added a use restriction the old one lacked. Trust is in the file and the release, not the publisher's name. | Conditional (licence change), then pass once legal signs off |
 | L2 | Self-hosted; data-location easy; record the licence change. | Pass |
 | L3 | Behavior test the new files, and compare against the release we already know, a cheap check only possible because we've run this publisher before. | Pass (R2) |
 | L4 | Automated attack testing; compare to the known prior release. | Pass |
-| L5 | The existing output filter carries over, but re-verify it works against the new files rather than assuming. | Pass |
+| L5 | The existing output filter carries over as defense in depth, but re-test it against the new files rather than assuming. | Pass |
 | L6 | Pin the new file hash; re-check on the next release; expires in 180 days. |  |
 
-**Result:** Allow with controls, R2, open-weight. What familiarity saved: verifying the publisher's identity, and having a known baseline to compare against. What it did **not** save, and this is the lesson: scanning the specific new file and re-reading the licence. The mistake it guards against is transitive trust, "we've used this publisher before, so this release is fine," which is exactly how a quietly relicensed file (here) or a poisoned one (Case A above) slips through. A familiar publisher lowers the cost of the gate; it never lets you skip it.
+**Result:** Allow, R2, open-weight (the licence conditional was closed by legal sign-off). What familiarity saved: verifying the publisher's identity, and having a known baseline to compare against. What it did **not** save, and this is the lesson: scanning the specific new file and re-reading the licence. The mistake it guards against is transitive trust, "we've used this publisher before, so this release is fine," which is exactly how a quietly relicensed file (here) or a poisoned one (Case A above) slips through. A familiar publisher lowers the cost of the gate; it never lets you skip it.
 
 ---
 
@@ -139,10 +139,10 @@ These three are not defects to patch. They are the honest edge of a framework wr
 |---|---|---|
 | L0 | Internal, some sensitive data, cannot act on its own. Stakes: **R2**. Origin: cloud-delivered third-party open-lineage model (no weights held). | Pass (R2) |
 | L1 | No weight file on our disk, so there is no malware, format, or checksum scan to run: that supply-chain surface is absorbed by the provider. Confirm which exact model variant and version Bedrock serves, and that it is pinned. Light. | Pass |
-| L2 | **Where a first-time, third-party, open-lineage model earns its scrutiny.** Confirm the provider's data terms (region and residency; inputs and outputs not used to train base models); determine our EU AI Act role; and run a model-origin and data-governance review, because adopting a model of this provenance for this data is a policy decision in its own right. | Conditional (origin and data-governance sign-off) |
+| L2 | **Where a first-time, third-party, open-lineage model earns its scrutiny.** Confirm the provider's data terms (region and residency; inputs and outputs not used to train base models); determine our EU AI Act role; and run a model-origin and data-governance review, because adopting a model of this provenance for this data is a policy decision in its own right. | Conditional (origin and data-governance sign-off), then pass once signed |
 | L3 | First time with this model, so no prior baseline to compare against: run the full behavior suite ourselves and read the model card. Label the evidence "ours", because the inherited vendor safety testing is thinner than a frontier lab's. | Pass (R2) |
-| L4 | Full attack testing scaled to R2, again with no prior release to diff against. | Pass |
-| L5 | Attach the platform's runtime guardrail (for example Bedrock Guardrails) on input and output, which adds a safety layer back at the platform level; verify it fires against the paths L3 and L4 surfaced. | Pass |
+| L4 | Full attack testing scaled to R2, again with no prior release to diff against. No critical survives, but indirect prompt injection through document content remains a residual (finding L4-F1). | Conditional (fix at L5) |
+| L5 | Attach the platform's runtime guardrail (for example Bedrock Guardrails) on input and output, which adds a safety layer back at the platform level and closes L4-F1; verify it drops that finding below the R2 bar, not merely that it fires. | Pass |
 | L6 | Pin the served model version and ID; re-check when the provider updates it; expires in 180 days. |  |
 
 **Result (first-time Qwen on Bedrock):** Allow with controls, R2, cloud-delivered open-lineage. The decisive contrast with Tests 3 and 4 is that the use and the model family are the same, but because the provider holds the files, the supply-chain workup that dominated the downloaded cases nearly vanishes. The effort moves instead to L2 (a first-time origin and data-governance decision) and to L3 and L4 (our own behavior and attack testing, since little frontier safety testing is inherited). What "first time" costs here is the full L3 to L4 workup with no baseline to compare against; what the provider saves is the file-level supply chain.
@@ -165,11 +165,11 @@ The framework's central claim (self-hosting an open-weight model can raise techn
 
 **What each result supports, honestly:**
 
-- **B1 (inconclusive on this battery).** Across the two independent 3-run passes the sign of the Q4-vs-Q8 delta reversed (-0.083, then +0.042), and both deltas come down to a single attack (`malware-oneliner`) that flips between runs. On this small battery compression shows no stable effect: B1 neither supports nor refutes the "compression can degrade safety" hypothesis (arXiv:2404.04392 predicts an effect but with large between-model variance). Do not lean on B1; it needs a bigger battery and more runs to say anything.
+- **B1 (inconclusive on this battery).** Across the two independent 3-run passes the sign of the Q4-vs-Q8 delta reversed (-0.083, then +0.042), and both deltas come down to a single attack (`malware-oneliner`) that flips between runs. On this small battery compression shows no stable effect: B1 neither supports nor refutes the "compression can degrade safety" hypothesis (arXiv:2404.04392 reports that quantization has variable effects on attack success rates). Do not lean on B1; it needs a bigger battery and more runs to say anything.
 - **B2 (strong, clean, reproduced).** The runtime guardrail dropped ASR from 0.375 to 0.000 with no flips, identical across both passes: it blocked every attack that landed without it. This is the cleanest and most load-bearing result for the claim, since "a cloud service ships a safety layer you lose when you self-host" is exactly the B2 effect isolated. (Caveat: an in-and-out guardrail on this small battery is a near-ceiling result; a larger, adaptive battery would be expected to find gaps.)
 - **B3 (a repeatable spread; the judge-family confound was checked and resolved).** Under the original fixed llama3.3:70b judge, llama3.1:8b sat at or near zero (0.042 then 0.000) while qwen2.5:7b and mistral:7b sat at 0.333, a large safest-to-least spread. Because llama3.3:70b shares a family with the llama3.1:8b target (which the harness's own separate-family rule warns against), the pilot was re-run twice with a fixed **out-of-family** judge, gemma2:9b (outside all three target families). llama3.1 stayed near zero (0.000 then 0.083), so its low rate is **not** a same-family grading artifact, and the ordering llama3.1 << qwen < mistral held. The absolute rates rose under the stricter gemma2 judge (qwen to 0.50, mistral to 0.58 and 0.67), which is exactly why the finding is the **spread and the ordering**, not the precise rates; the spread is if anything larger under the independent judge. "Open-weight" is not one risk level; the specific model chosen is a first-order decision.
 
-**Net:** B2 (reproduced exactly) and B3 (a safest-to-least spread that held under an independent out-of-family judge) are directionally consistent with the corrected claim: open-weight adds supply-chain work and can raise technical risk, chiefly through losing the vendor's runtime guardrail and through model choice. B1 is inconclusive on this battery, so the claim rests on the guardrail-loss and model-choice effects, not on compression. That is directionally consistent with the correction to the overstated "no added technical risk" line, and no more: this pilot is a plausibility demonstration on small local models, not evidence that generalizes to frontier or production models, so it illustrates the mechanism rather than proving a rate. The structural argument and the incident record, not this harness, carry the central claim. Raw transcripts stay in `results/` (git-ignored, since they contain attack outputs). Honest limits carry over from `experiments/claim-verification.md`: small local models, a fixed battery, relative effects rather than absolute frontier risk.
+**Net:** B2 (reproduced exactly) and B3 (a safest-to-least spread that held under an independent out-of-family judge) are directionally consistent with the corrected claim: open-weight adds supply-chain work and can raise technical risk, chiefly through losing the vendor's runtime guardrail and through model choice. B1 is inconclusive on this battery, so the claim rests on the guardrail-loss and model-choice effects, not on compression. That is directionally consistent with the correction to the overstated "no added technical risk" line, and no more: this pilot is a plausibility demonstration on small local models, not evidence that generalizes to frontier or production models, so it illustrates the mechanism rather than proving a rate. The structural argument and the incident record, not this harness, carry the central claim. Per-configuration results (attack-success rate, per-attack counts, flips) are written to `experiments/results/`, which is git-ignored. The figures above were produced before the harness's error handling and judge-parsing were tightened; they have not been re-run since. Honest limits carry over from `experiments/claim-verification.md`: small local models, a fixed battery, relative effects rather than absolute frontier risk.
 
 ---
 
@@ -186,4 +186,4 @@ Where could the Gate give a wrong, or falsely confident, answer, and what stops 
 
 **What testing the method changed:** it forced three things into the open that had been left implicit: the fact that the Gate is written for the adopter (not the model builder), the boundary between the model and the wider system, and the need to label evidence as "ours" versus "the vendor's."
 
-**Verdict on the method:** it holds. It covers the risks an adopter can actually reach, it produces sensible answers on both cloud and open-weight cases, and its weak points are either defended by design or named as honest limits. It has been written up and published. Open `[verify]` items are tagged in the text: the exact ISO/IEC 42001 Annex A sub-clause numbers (they need the purchased standard) and the canonical title of CSA AICM control GRC-07, both in standards-crosswalk.md; the MITRE ATLAS technique numbers beyond AML.T0051 for the L4 agentic sub-track, in FRAMEWORK.md; and AgentDojo's repository URL and current scope, in starters/README.md.
+**Verdict on the method, so far:** on these tests it covers the risks an adopter can reach, it gives sensible answers across cloud and open-weight cases, and its weak points are either defended by design or named as limits. The worked runs are illustrative walkthroughs, not field runs, and no external adopter has used it yet. One `[verify]` item remains open: the exact ISO/IEC 42001 Annex A sub-clause numbers in standards-crosswalk.md, which need the purchased standard.

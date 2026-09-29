@@ -1,6 +1,6 @@
 # Quickstart: from "a team brought us a model" to a signed record
 
-*The one-afternoon path. It threads the parts you actually run and links each step to the file that carries the detail. Read [FRAMEWORK.md](FRAMEWORK.md) once for the why; you do not need it open to follow this.*
+*The shortest path: an afternoon for a low-stakes cloud model, longer at higher rigor (see effort sizing in [RUNBOOK.md](RUNBOOK.md)). It threads the parts you actually run and links each step to the file that carries the detail. Read [FRAMEWORK.md](FRAMEWORK.md) once for the why; you do not need it open to follow this.*
 
 You are deciding whether to trust **one model, for one use**, and producing a signed record you can defend. Seven checks, cheapest first, fail-fast.
 
@@ -15,7 +15,7 @@ Take the **highest** level any single driver reaches (RUNBOOK "Step 1"): R1 low,
 ## 3. Pick a track (1 minute)
 
 - **Fast track** if R1/R2, cloud or hosted-open-weight, unmodified, no floor: same gate, the expensive high-rigor steps omitted.
-- **Full track** otherwise (R3/R4, or downloaded, or modified, or any floor): every layer at full strength, an approver independent of the requesting team, and a human red-team at L4.
+- **Full track** otherwise (R3/R4, or downloaded, or modified, or any floor): every layer at full strength, and at R3/R4 an approver independent of the requesting team and a human red-team at L4.
 
 The moment a fast-track assumption breaks (a modification appears, L3/L4 reveals a higher-stakes capability), fall back to the full track.
 
@@ -26,7 +26,7 @@ Work the per-layer checklist in [RUNBOOK.md](RUNBOOK.md). The governance layers 
 - **L3 Behavior:** [`starters/promptfoo-behavior.yaml`](starters/promptfoo-behavior.yaml). Refusal correctness, over-refusal, grounding. Read against the RUNBOOK pass-bars.
 - **L4 Attack resistance:** [`starters/garak-attack.sh`](starters/garak-attack.sh). Jailbreak, injection, leakage. Read the attack-success rate against the bar; add a human red-team at R3/R4.
 
-Each layer ends in **pass**, **conditional** (allowed once a named L5 control closes a specific finding), or **stop** (a Deny that ends the run).
+Each layer ends in **pass**, **conditional** (allowed once a named fix lands: an L5 control that closes a specific L3/L4 finding, or a sign-off or contract change at L1/L2), or **stop** (a Deny that ends the run).
 
 ## 5. Guardrails and hand-off (L5, L6, Exit Gate)
 

@@ -32,13 +32,13 @@ Where a starter uses a model to grade another model (the L3 rubric), pick a grad
 
 When the model *acts* (tools, memory, multi-step autonomy), generic prompt-injection testing is not enough. Agentic tests are specific to your agent's tools and environment, so this is guidance, not a drop-in config (see the L4 agentic sub-track in [`../FRAMEWORK.md`](../FRAMEWORK.md)):
 
-- **AgentDojo** runs prompt-injection attacks and defenses against tool-using agents. Point it at your agent's tool set to exercise indirect goal hijack and tool misuse. `[verify: AgentDojo's repository URL and current scope, against the project's own README]`
-- **The author's `ai-redteam-orchestrator` MCP layer** checks MCP tool servers for supply-chain and tool-description risks.
+- **[AgentDojo](https://github.com/ethz-spylab/agentdojo)** is a benchmark environment that runs prompt-injection attacks and defenses against tool-using agents. It ships its own task suites; to exercise your agent's tools, add a suite through its Python API (which the project notes is still changing). Use it for indirect goal hijack and tool misuse.
+- **The MCP layer of my [`ai-redteam-orchestrator`](https://github.com/josephManzambi/ai-redteam-orchestrator)** checks MCP tool servers for supply-chain and tool-description risks.
 - Cover the five classes from the sub-track: indirect goal hijack, tool misuse, memory and context poisoning, privilege abuse and confused deputy, and excessive agency. Record agent-level findings separately and hand them to the Exit Gate.
 
 ## Install
 
 ```bash
-npx promptfoo@latest --version     # L3 (Node); or: npm i -g promptfoo
-pip install garak                  # L4 (Python)
+npx promptfoo@latest --version            # L3 (Node); or: npm i -g promptfoo
+python3 -m pip install -U "garak>=0.17"   # L4 (needs Python 3.11+; older Pythons get a garak without --spec)
 ```
