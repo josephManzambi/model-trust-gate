@@ -1,6 +1,6 @@
-# Verifying the open-weight risk claims with the orchestrator
+# Testing the open-weight risk claims
 
-The framework's central idea makes claims that can be tested rather than asserted. This is the plan to check them with the `ai-redteam-orchestrator`, honestly, including what the local setup can and cannot prove.
+The framework's central idea makes claims that can be tested rather than asserted. This is the protocol for testing them on local models, including what that setup can and cannot prove. Results are in Test 6 of [VALIDATION.md](../VALIDATION.md).
 
 ## The claims, split apart
 
@@ -24,7 +24,7 @@ Run **one model twice against the same attacks**: once with a runtime guardrail 
 Run the same audit across **three or four different open-weight models** of similar size but different families and tuning. Compare their postures.
 - **Confirms** if postures vary materially, which shows "open-weight" is not one risk level; the specific model you pick is a first-order decision.
 
-## Measurement discipline (carried from the local red-teaming field report)
+## Measurement discipline
 
 - Run each configuration **more than once**. With single-sample probes and no fixed seed, one run is a coin flip. Treat any result that flips between runs as unresolved.
 - Use a **separate-family judge** model, and only let it escalate a finding, never downgrade one (small judges reliably miss quiet leaks).
@@ -36,14 +36,15 @@ Run the same audit across **three or four different open-weight models** of simi
 - These are small, local models, not frontier ones. The findings are about the plumbing and the relative effects, not absolute frontier risk.
 - The cleanest form of Claim A (the *same frontier model*, cloud versus self-hosted) cannot be run here, because frontier models are not open-weight. Claim A therefore stays a structural argument backed by the incident record, not a head-to-head measurement.
 - The compression tests are limited to the tags actually available for a given model.
-- The orchestrator's own known caveats apply (some layers reach the cloud, the toolchain is only half-pinnable).
 
 ## What a clean result set buys you
 
-- If B1, B2, and B3 show measurable effects, they weigh against the original overstated line ("no added technical risk") and are directionally consistent with the corrected one (open-weight adds supply-chain work and can raise technical risk). The correction is then evidenced rather than only argued. Treat the result as a **directional pilot, not a definitive measurement**: with a small fixed battery and few runs it shows the direction and rough size of an effect, not a precise rate, and any result that flips between runs is unresolved. That is still exactly the step-2 technical assessment in the study-then-assess-then-publish pipeline, provided it is reported with that honesty.
-- If they show no effect, that is also worth knowing, and would push the wording back toward the stronger original claim.
+- If B1, B2, and B3 show measurable effects, they weigh against the stronger claim that self-hosting adds no technical risk, and are directionally consistent with the claim as now stated (open-weight adds supply-chain work and can raise technical risk). The correction is then evidenced rather than only argued. Treat the result as a **directional pilot, not a definitive measurement**: with a small fixed battery and few runs it shows the direction and rough size of an effect, not a precise rate, and any result that flips between runs is unresolved.
+- If they show no effect, that is also worth knowing, and would push the wording back toward "supply-chain work only".
 
 ## Running the tests
+
+Other scripts in this folder: `l3_origin_probe.py` and `sec_assistant_probe.py` are the reproducible probes behind [Don't judge an AI model by its origin](https://www.manzambi.com/writing/dont-judge-an-ai-model-by-its-origin/) (behaviour and security-assistant fitness across three open models of different origin). Same conventions: local Ollama, several runs per prompt, an out-of-family judge, results under `experiments/results/`.
 
 A single, dependency-free harness (`harness.py`, Python stdlib only, talks to a local Ollama server) runs all three:
 
@@ -55,4 +56,4 @@ python harness.py --mode B2 --runs 3 --target qwen2.5:7b   # guardrail on/off (L
 
 It applies one fixed attack battery (exfiltration, prompt injection, jailbreak, harmful-code and harmful-instruction prompts) and changes only the variable under test. Scoring is escalate-only: unambiguous deterministic markers first (a leaked `root:x:0:0` or an injected token is a real success), then a **separate-family judge** that may only add a success the markers missed, never clear one. Each configuration runs `--runs` times; results (attack-success rate per configuration, per-attack counts, flips, and any failed attempts) are written to `experiments/results/` (git-ignored). A failed model call is excluded from the denominator and makes the run exit non-zero, so an outage can never read as 'no attack landed'.
 
-**Why a focused harness rather than the full `ai-redteam-orchestrator`:** the orchestrator's multi-turn layer hardcodes a single model as both target and judge (self-play), which would neither vary the target under test nor grade it independently. A controlled harness that holds the attack set fixed and swaps only one variable is the cleaner comparison for a published claim. It inherits the same honest limits above: small local models, a fixed battery, relative effects rather than absolute frontier risk.
+**Why a focused harness rather than a general red-team tool such as my [`ai-redteam-orchestrator`](https://github.com/josephManzambi/ai-redteam-orchestrator):** its multi-turn layer uses a single model as both target and judge (self-play), which would neither vary the target under test nor grade it independently. A controlled harness that holds the attack set fixed and swaps only one variable is the cleaner comparison for a published claim. It inherits the same honest limits above: small local models, a fixed battery, relative effects rather than absolute frontier risk.

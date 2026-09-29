@@ -2,8 +2,6 @@
 
 *A step-by-step way to decide whether your organization should trust a given AI model, for a specific use, with the right amount of scrutiny and a record you can show an auditor.*
 
-**Status:** working draft (v0.2.1), a personal working document. Facts that still need a primary-source check are tagged `[verify]` in the text.
-
 ## The problem
 
 Teams keep adopting AI models: cloud services you call over an API, and open-weight models you download and run yourself. Before each one goes live, someone has to decide whether it is safe enough for the use, and be able to defend that call. That is a hard decision, and an easy one to make inconsistently. The Model Trust Gate turns it into a repeatable procedure, like a vendor-risk or change-approval gate, but for AI models. It ends in a signed, dated **Model Trust Record**.
@@ -26,7 +24,7 @@ Two paths, depending on why you are here.
 
 - **[FRAMEWORK.md](FRAMEWORK.md)**: the method in full, the seven-layer gate, Rigor Levels, and the Model Trust Record.
 - **[VALIDATION.md](VALIDATION.md)**: how it holds up, a coverage crosswalk, worked runs, and an attack on the method itself (optional for a first review).
-- **[experiments/claim-verification.md](experiments/claim-verification.md)**: the protocol behind the empirical pilot of the framework's central claim, that self-hosting an open-weight model relocates supply-chain risk onto the adopter.
+- **[experiments/claim-verification.md](experiments/claim-verification.md)**: the protocol behind the empirical pilot of the framework's central claim, that self-hosting an open-weight model relocates supply-chain risk onto the adopter. The same folder holds the two probes behind [Don't judge an AI model by its origin](https://www.manzambi.com/writing/dont-judge-an-ai-model-by-its-origin/), which applies the Gate's L3 and L4 to three open models of different origin.
 - **[standards-crosswalk.md](standards-crosswalk.md)**: the control-level backing, each layer mapped to ISO/IEC 42001 clauses and CSA AICM control IDs.
 
 ## The idea in one screen
@@ -53,6 +51,8 @@ Evidence:         each item labelled "ours" or "vendor's"
 Expires:          2027-02-21 (180 days), or earlier if the provider updates the served model version
 Approved by:      a reviewer independent of the requesting team
 ```
+
+**Status:** working draft (v0.2.1), a personal working document. Facts that still need a primary-source check are tagged `[verify]` in the text.
 
 ## What it composes
 
