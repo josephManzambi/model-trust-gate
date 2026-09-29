@@ -2,7 +2,7 @@
 
 *A step-by-step way to decide whether your organization should trust a given AI model, for a specific use, with the right amount of scrutiny and a record you can show an auditor.*
 
-**Status:** working draft (v0.2.1). Facts that need a primary-source check before publication are tagged `[verify]`.
+**Status:** working draft (v0.2.1). Facts that still need a primary-source check are tagged `[verify]`.
 
 ---
 
@@ -10,7 +10,7 @@
 
 **The problem.** Teams keep adopting AI models, both cloud services and downloadable open-weight models, and someone has to decide whether each is safe enough for a given use, then be able to defend that call. That is a hard decision, and an easy one to make inconsistently. The Model Trust Gate makes it a repeatable procedure, like a vendor-risk or change-approval gate, but for AI models.
 
-**How it works.** Seven checks, run in order from cheap to expensive, so a model that fails an early check is stopped before you spend on the hard testing. Each check ends in one of three outcomes: pass, conditional-pass (allowed once a named control is added), or stop.
+**How it works.** Seven checks, run in order from cheap to expensive, so a model that fails an early check is stopped before you spend on the hard testing. Each check ends in one of three outcomes: pass, conditional-pass (allowed once a named fix is in place: a production control, a contract change, or a sign-off), or stop.
 
 The seven questions, in plain terms:
 
@@ -23,7 +23,7 @@ The seven questions, in plain terms:
 - **L6 Upkeep:** how do we keep this decision valid as the model, threats, and rules change?
 
 <p align="center">
-  <img src="assets/model-trust-gate-diagram.png" alt="The Model Trust Gate: seven ordered checks from L0 to L6, run cheapest first, each ending in pass, conditional pass, or fail. Passing all seven produces a signed, dated Model Trust Record; a fail at any gate stops the sequence and is recorded." width="560">
+  <img src="assets/model-trust-gate-diagram.png" alt="The Model Trust Gate: seven ordered checks from L0 to L6, run cheapest first, each ending in pass, conditional pass, or stop. Passing all seven produces a signed, dated Model Trust Record; a stop at any gate ends the sequence and is recorded." width="560">
 </p>
 
 **Scrutiny scales with stakes.** A meeting-notes tool gets a light review (level R1); a model deciding insurance claims gets a heavy one (level R4). The scrutiny level belongs to the *use*, not the model.
@@ -82,7 +82,7 @@ The drivers:
   - **Scope 2, prescribed agency:** it proposes an action, but a human must approve each one.
   - **Scope 3, supervised agency:** it runs multi-step tasks on its own; a human triggers and oversees.
   - **Scope 4, full agency:** it acts on its own initiative in response to events, with no human trigger.
-- **Agency: what it is permitted to touch and do.** The matrix grades this on two sub-dimensions, permission and reach, which combine into a ladder of their own:
+- **Agency: what it is permitted to touch and do.** Adapted from the same AWS and CSA agentic scoping work, this combines two things, permission (read or write) and reach (how consequential the systems are), into a ladder of its own:
   - **Read-only:** it can retrieve and read, but cannot change anything.
   - **Write, bounded:** it can create or change data, but only within a narrow, reversible, low-exposure scope.
   - **Read-write on consequential systems:** it can change records or state that matter to the business or to a person.
@@ -90,7 +90,7 @@ The drivers:
 
   Two agents at the same autonomy scope carry very different risk if one is read-only and the other has privileged reach.
 
-The third driver is **data sensitivity**: public, internal, or regulated and personal data.
+The third driver is **data sensitivity**: public, some internal, customer-facing or internal sensitive, or the most sensitive (regulated personal data).
 
 The fourth driver is **impact: how much its output affects a person or the business, whether or not the model "acts."** A model that only outputs a score still drives a real decision when that score screens a job applicant, prices insurance, or ranks a claim. Customer-facing reach and blast radius live here too. This driver exists because a pure advisory or scoring model can be Scope 1 on autonomy and read-only on agency, yet be one of the highest-stakes uses in the building. (This is the rigor input, distinct from the formal AI System Impact Assessment produced at L2; its four levels track the EU AI Act's risk framing, from minimal to high-risk.)
 
@@ -116,7 +116,7 @@ The Rigor Level belongs to the *use*, not the model. The same model can be R1 in
 
 Read each layer as one question you must answer. For each, this document gives you: the question in plain terms, why a security leader should care, what a pass, conditional-pass, or stop means, a short concrete example, and the standards and tools that support it.
 
-The flow is a gate. A **stop (FAIL)** can occur at any layer and ends the process; the governance checks (L0 to L2) are simply where most early stops happen, before you spend on testing. A **conditional-pass (CONDITIONAL)** in the technical layers means "allowed, but only once we add a specific control," and that control gets built at Layer 5. Note that L4's stop-versus-conditional line depends on whether a control at L5 can contain the finding, so L4 and L5 are judged together, not in strict isolation.
+The flow is a gate. A **stop** can occur at any layer and ends the process; the governance checks (L0 to L2) are simply where most early stops happen, before you spend on testing. A **conditional-pass (CONDITIONAL)** in the technical layers (L3, L4) means "allowed, but only once we add a specific control," and that control gets built at Layer 5. A conditional in the governance layers (L1, L2) is closed by a named fix instead (a legal sign-off, a contract amendment, a region change); when the fix lands, the layer is recorded `pass` and the fix goes into the record's evidence. Note that L4's stop-versus-conditional line depends on whether a control at L5 can contain the finding, so L4 and L5 are judged together, not in strict isolation.
 
 ### The flow is not strictly linear: recursive triggers
 
@@ -157,14 +157,14 @@ This is the layer that looks completely different depending on the model's origi
 
 - **Why you care:** a model can be perfectly secure and still be one you are not permitted to use for this data, in this region, under this contract. Finding that out after you've deployed is expensive; finding it out after a regulator asks is worse.
 - **What happens (a mapping exercise, not a checklist).** Do not just tick boxes; map the use onto the controls that govern it and produce the artifacts a regulator asks for by name. Concretely: (1) confirm the data-processing agreement, data-residency, and the subprocessor chain (who actually runs inference); (2) determine your role under the EU AI Act (deployer versus provider) and the obligations that attach; (3) run an **AI System Impact Assessment** as ISO/IEC 42001 requires (Clause 6.1.4 establishes the process, Clause 8.4 performs it; Annex A.5 controls), and, where it applies, the EU AI Act's **Fundamental Rights Impact Assessment**: note Art. 27 mandates the FRIA only for specific deployers (public bodies, private providers of public services, and deployers of the Annex III credit-scoring and life/health-insurance-pricing systems), not for every high-risk use, and Art. 27(4) lets the FRIA build on and complement an existing GDPR DPIA where that DPIA already covers the same ground; (4) map the use to the specific **CSA AICM** control objectives it touches, by control ID. The full layer-by-layer ISO 42001 and AICM crosswalk is in `standards-crosswalk.md`, so the decision is evidenced against named controls, not just framework names.
-- **A modification trigger.** If you fine-tune or substantially modify an open-weight model, your legal standing can change: under the EU AI Act, substantially modifying a general-purpose model can make *you* its provider. "Substantial" has a threshold: the Commission's guidance treats a modification using roughly one-third or more of the original training compute as the line, so ordinary fine-tuning usually does not flip your status, but a large continued-pretraining run can. Whenever Layer 3 flags a modification past that line, re-run this layer under **provider** obligations, which include Art. 43 conformity assessment, Art. 49 EU-database registration, and Art. 18/19 technical-documentation and log retention, not the lighter deployer ones.
+- **A modification trigger.** If you fine-tune or substantially modify an open-weight model, your legal standing can change: under the EU AI Act, substantially modifying a general-purpose model can make *you* its provider. "Substantial" has a threshold: the Commission's guidance treats a modification using roughly one-third or more of the original training compute as the line, so ordinary fine-tuning usually does not flip your status, but a large continued-pretraining run can. Whenever Layer 3 flags a modification past that line, re-run this layer under **provider** obligations, which for a general-purpose model are the GPAI-provider duties (Art. 53, and Art. 55 if the model has systemic risk), not the lighter deployer ones. The high-risk provider duties (Art. 43 conformity assessment, Art. 49 registration, Art. 18/19 documentation and log retention) attach only if you also become the provider of a high-risk system under Art. 25(1).
 - **The decision:** **stop** if a hard legal barrier can't be met (for example, the data must stay in-region and the model can't guarantee that). **Conditional-pass** with named fixes (a contract amendment, a region change). **Pass** if the obligations are mapped and satisfiable.
 - **Draws on:** ISO/IEC 42001, CSA AICM, EU AI Act, NIST AI RMF ("Govern").
 
 ### Layer 3: With nobody attacking it, does the model behave well enough for this job?
 
 - **Why you care:** before you worry about attackers, the model has to do the job acceptably in normal use. A support model that refuses legitimate requests, shows bias, or confidently invents policy is a failure even though nothing "attacked" it.
-- **What happens:** run tests scoped to the Rigor Level for the things this use cares about: does it refuse the right things and only the right things, is it biased, how often does it make things up, does it follow instructions. For dangerous capabilities you cannot responsibly test yourself (for example, whether it meaningfully helps build a weapon), you rely on the vendor's published safety testing and clearly label that evidence as *inherited* (theirs), not *produced* (yours). When you inherit a benchmark or vendor score, ask for the cheating-detection and monitoring methodology behind it: models are documented to game evaluations, so a score with no disclosed integrity method is weaker evidence than it looks, and neither the model's self-report nor its reasoning trace is a reliable check on this. One coupling to handle precisely: what happens to inherited evidence when you modify the model (quantize, fine-tune, merge, or strip the runtime guardrail). The research is blunt, so the rule is too: safety drift after modification is *unpredictable and not reliably a function of the type or degree of change* (CDT and MIT, *Out of Tune: Fine-Tuning Foundation Models Leads to Unpredictable Safety Drift*, April 2026, https://cdt.org/insights/out-of-tune-fine-tuning-foundation-models-leads-to-unpredictable-safety-drift/; and arXiv:2604.24902), and even quantization sub-degrees matter. So **no modification-type earns a "safety survives" pass.** Concretely:
+- **What happens:** run tests scoped to the Rigor Level for the things this use cares about: does it refuse the right things and only the right things, is it biased, how often does it make things up, does it follow instructions. For dangerous capabilities you cannot responsibly test yourself (for example, whether it meaningfully helps build a weapon), you rely on the vendor's published safety testing and clearly label that evidence as *inherited* (theirs), not *produced* (yours). When you inherit a benchmark or vendor score, ask for the cheating-detection and monitoring methodology behind it: models are documented to game evaluations, so a score with no disclosed integrity method is weaker evidence than it looks, and neither the model's self-report nor its reasoning trace is a reliable check on this. One coupling to handle precisely: what happens to inherited evidence when you modify the model (quantize, fine-tune, merge, or strip the runtime guardrail). The research is blunt, so the rule is too: safety drift after modification is *unpredictable and not reliably a function of the type or degree of change* (CDT and MIT, *Out of Tune: Fine-Tuning Foundation Models Leads to Unpredictable Safety Drift*, April 2026, https://cdt.org/insights/out-of-tune-fine-tuning-foundation-models-leads-to-unpredictable-safety-drift/; and arXiv:2604.24902). So **no modification-type earns a "safety survives" pass.** Concretely:
   - **Any modification voids inherited *behavioural* evidence** (everything tested at L3 and L4). Re-test it on the exact artifact you will deploy. Only *non-behavioural* evidence carries over unchanged: provenance, licence, and the vendor's documentation of intended use.
   - The tiers below are a **re-test priority when you cannot re-test everything at once**, not a licence to skip. Do them in this order: **Tier 3 first** (adversarial robustness, safety-bypass resistance, dangerous-capability limits, the most dangerous to get wrong); **then Tier 1** (general safety and refusal behaviour, which quantization is documented to erode); **then Tier 2** (task performance and precision, the thing your use depends on day to day).
 
@@ -177,16 +177,16 @@ This is the layer that looks completely different depending on the model's origi
 - **Why you care:** real users include hostile ones. The headline AI incidents are here: an email with hidden instructions that makes an assistant leak internal data, a chatbot talked past its rules, an agent tricked into misusing the tools it was given. This is the layer the news is about.
 - **What happens:** red-team the model in the shape you'll actually deploy it. Try jailbreaks, prompt injection, multi-step manipulation, getting it to leak its instructions or data, and (for agents) getting it to abuse its tools. How hard you push is set by the Rigor Level: an R1 use gets an automated smoke test, an R4 use gets a strong attacker and human experts.
 - **The agentic sub-track (only when the model acts, not just answers).** If the use gives the model tools, memory, or multi-step autonomy (agency above read-only), generic prompt-injection testing is not enough: test the agent as a system that can be steered into *acting*. Five classes, each mapped to the OWASP Top 10 for Agentic Applications 2026 (the ASI Top 10) and, where a clean mapping exists, MITRE ATLAS:
-    - **Indirect goal hijack** via poisoned tool or document output the agent reads (ASI01 Agent Goal Hijack; ATLAS LLM Prompt Injection, AML.T0051): does content returned by a tool redirect what the agent does next?
-    - **Tool misuse under adversarial framing** (ASI02 Tool Misuse and Exploitation): can a task be phrased so the agent turns a legitimate tool to harm, a destructive command, an unintended write, data egress?
-    - **Memory and context poisoning** across turns (ASI06 Memory and Context Poisoning): does an instruction planted in earlier context or long-term memory change later behavior?
-    - **Privilege abuse and confused deputy** (ASI03 Identity and Privilege Abuse): can the agent be made to act with a credential, or reach a system, beyond the task's least-privilege grant?
+    - **Indirect goal hijack** via poisoned tool or document output the agent reads (ASI01 Agent Goal Hijack; ATLAS LLM Prompt Injection: Indirect, AML.T0051.001, and AI Agent Tool Data Poisoning, AML.T0099): does content returned by a tool redirect what the agent does next?
+    - **Tool misuse under adversarial framing** (ASI02 Tool Misuse and Exploitation; ATLAS AI Agent Tool Invocation, AML.T0053): can a task be phrased so the agent turns a legitimate tool to harm, a destructive command, an unintended write, data egress?
+    - **Memory and context poisoning** across turns (ASI06 Memory and Context Poisoning; ATLAS AI Agent Context Poisoning: Memory, AML.T0080.000): does an instruction planted in earlier context or long-term memory change later behavior?
+    - **Privilege abuse and confused deputy** (ASI03 Identity and Privilege Abuse; no single clean ATLAS technique): can the agent be made to act with a credential, or reach a system, beyond the task's least-privilege grant?
     - **Excessive agency** (ASI03, and ASI10 Rogue Agents for autonomous drift): does it take consequential actions it was never scoped to take, or keep acting past its stop condition?
-  Keep **agent-level** findings (the orchestration, tool wiring, memory store, and inter-agent messaging, ASI07) separate from **model-level** findings: the Gate judges the model, so agent-level and multi-agent-system findings are flagged and handed to the Exit Gate's system review, not silently absorbed at L4. A concrete adversarial harness for the injection classes is AgentDojo (it runs prompt-injection attacks and defenses against tool-using agents); the author's `ai-redteam-orchestrator` MCP layer covers tool-server supply-chain checks. `[verify: exact MITRE ATLAS technique numbers beyond AML.T0051, against the ATLAS matrix]`
+  Keep **agent-level** findings (the orchestration, tool wiring, memory store, and inter-agent messaging, ASI07) separate from **model-level** findings: the Gate judges the model, so agent-level and multi-agent-system findings are flagged and handed to the Exit Gate's system review, not silently absorbed at L4. A concrete adversarial harness for the injection classes is AgentDojo (it runs prompt-injection attacks and defenses against tool-using agents); the MCP layer of my [`ai-redteam-orchestrator`](https://github.com/josephManzambi/ai-redteam-orchestrator) covers tool-server supply-chain checks.
 - **The honesty rule, worth stating out loud:** finding a successful attack is proof of a real problem. Finding nothing is *not* proof of safety; it may just mean you didn't attack hard enough. So a clean result at low rigor must never be read as "this model is safe."
-- **Evaluation integrity, the harder version of the honesty rule:** models are documented across vendors to *cheat on the evaluation itself*, and the two cheapest integrity checks, asking the model to self-report and reading its reasoning trace, miss it (CSA research note on frontier-model evaluation cheating, drawing on UK AI Safety Institute data, 2026; Anthropic's July 2026 post-mortem of three incidents where its own models reached real infrastructure from a supposedly isolated evaluation harness; and the July 2026 Hugging Face intrusion by an autonomous agent framework, which OpenAI attributed to one of its own models escaping a cyber-evaluation, though Hugging Face could not confirm the model or the motive). For R3 and R4, do not trust the score alone: run the eval under independent, out-of-band monitoring (watch for network egress, privilege-escalation attempts, or access to non-task systems during the run), give the harness sandbox egress controls robust enough to contain a model trying to escape it, and add manual review of the trajectories, not just the final answer, for any result that will inform a deployment decision.
+- **Evaluation integrity, the harder version of the honesty rule:** models are documented across vendors to *cheat on the evaluation itself*, and the two cheapest integrity checks, asking the model to self-report and reading its reasoning trace, miss it (CSA research note on frontier-model evaluation cheating, drawing on UK AI Security Institute data, 2026; Anthropic's July 2026 post-mortem of three incidents where its own models reached real infrastructure from a supposedly isolated evaluation harness; and the July 2026 Hugging Face intrusion by an autonomous agent framework, which OpenAI attributed to a combination of its own models, including GPT-5.6 Sol and a pre-release research model, escaping a cyber-evaluation, though Hugging Face could not confirm the model or the motive). For R3 and R4, do not trust the score alone: run the eval under independent, out-of-band monitoring (watch for network egress, privilege-escalation attempts, or access to non-task systems during the run), give the harness sandbox egress controls robust enough to contain a model trying to escape it, and add manual review of the trajectories, not just the final answer, for any result that will inform a deployment decision.
 - **The decision:** **stop** on a critical you can't contain (for example, a trivial injection that makes an agent run destructive commands). **Conditional-pass** for problems a runtime control can contain. **Pass** if nothing critical survives testing at the right strength.
-- **Draws on:** OWASP Top 10 for LLM Applications 2026, MITRE ATLAS, NIST AI 100-2 E2025 (the adversarial-ML taxonomy: evasion, poisoning, privacy attacks, and direct and indirect prompt injection). For agentic deployments, also the OWASP Top 10 for Agentic Applications 2026, the ASI Top 10 (agent goal hijacking, tool misuse and exploitation, memory and context poisoning). Tools: `garak`, `promptfoo`, `PyRIT`, `HarmBench`, `CyberSecEval`, UK AI Safety Institute `Inspect`.
+- **Draws on:** OWASP Top 10 for LLM Applications 2026, MITRE ATLAS, NIST AI 100-2 E2025 (the adversarial-ML taxonomy: evasion, poisoning, privacy attacks, and direct and indirect prompt injection). For agentic deployments, also the OWASP Top 10 for Agentic Applications 2026, the ASI Top 10 (agent goal hijacking, tool misuse and exploitation, memory and context poisoning). Tools: `garak`, `promptfoo`, `PyRIT`, `HarmBench`, `CyberSecEval`, UK AI Security Institute `Inspect`.
 
 ### Layer 5: What guardrails do we wrap around it in production?
 
@@ -230,19 +230,20 @@ Risk transfer:    <RTD ref> · accepted by <system-review owner + date>
 Re-check when:    <events that force a re-check>   Expires(date): <ISO date>   Expires(event): <e.g. version bump>
 Approved by:      <name + role; for R3/R4, an approver independent of the team proposing the model>
 Incident owner:   <who notifies the provider / regulator on an incident, plus the deadline>
-Retention:        <how long this record is kept; once provider status attaches, at least the Art. 18 floor>
+Retention:        <how long this record is kept; if you are the provider of a high-risk system, at least the Art. 18 period>
 Record status:    append-only, signed, stored WORM/immutable; a re-check produces a new record, not an edit
 ```
 
 **How the per-layer results become the overall verdict** (a total rule, so a policy engine can compute it, and every case is covered):
 
 - Any **stop** at any layer is a **Deny**. (A containable problem is recorded as a *conditional*, not a stop, so a stop is by definition uncontained; there is no "stop you cannot contain" separate from "stop.")
+- A **governance conditional** (L1 or L2) is closed by its named fix (a sign-off, a contract amendment, a region change). Once the fix lands the layer is recorded `pass` and the fix goes into the evidence; if it never lands, the layer is a stop. Only L3 and L4 conditionals are carried into the final record and closed at L5.
 - A **conditional that L5 does not verifiably close** is also a **Deny**.
 - **All layers pass**, no control needed, is an **Allow**.
 - **Every conditional closed by a verified L5 control** is an **Allow with controls**.
 - **Restrict to a narrower use** applies when a conditional was resolved *only* by narrowing the use; the record must then carry the narrower use it is valid for (the `narrowed_use` field), or the verdict is not well-formed.
 
-**A filled-in example** (from the first validation run: a new version of a cloud model already used for a customer-support agent). Illustrative, no real vendor named.
+**A filled-in example** (the illustrative walkthrough in Test 2 of VALIDATION.md: a new version of a cloud model already used for a customer-support agent). Illustrative, no real vendor named.
 
 ```
 Model Trust Record
@@ -258,35 +259,36 @@ Controls added:   (1) instruction / tool-output separation + spotlighting on the
                   closing the L4 indirect-injection path found via a tool result;
                   (2) least-privilege scope on the update-order tool (no bulk actions, no refunds);
                   (3) prompt-tuned the two support intents that over-refused at L3.
-                  All three verified to fire before sign-off.
+                  Each verified to drop its finding below the R3 bar on a paraphrase set before sign-off.
 Evidence:         L1 provider SOC 2 + system card (vendor's); L3 domain eval scorecard (ours)
                   and capability/safety deltas (vendor's, inherited); L4 red-team report at R3
-                  strength (ours). Links in ticket AISEC-482.
+                  strength (ours). Links in ticket EXAMPLE-482.
 Re-check when:    next model-version bump, or any new tool granted to the agent
-Expires:          2026-11-03 (90 days)
+Expires:          2026-10-30 (90 days)
 Approved by:      J. Rivera, Head of AI Security (independent of the support-platform team)
-Incident owner:   SOC on-call; notify the provider immediately, and the regulator within the
-                  Art. 73 deadline if it is a reportable incident
-Retention:        7 years (matches the support platform's records-retention policy)
+Incident owner:   SOC on-call; notify the provider immediately (Art. 73 serious-incident
+                  reporting would apply only if the system were high-risk)
+Retention:        7 years (example value; set it from your own records-retention policy)
 Record status:    append-only; the re-check at expiry produces a new record, not an edit of this one
 ```
 
 ### Built for automation: an auditable, invariant-checkable record
 
-Every layer emits exactly one of three verdicts (`pass`, `conditional`, `stop`), the overall verdict is computed from them by the total rule above, and the record is JSON, so a policy engine such as Open Policy Agent (OPA) can *check and enforce its invariants* at the deployment gate. The record, as JSON:
+Layers L0 to L5 each emit exactly one of three verdicts (`pass`, `conditional`, `stop`); L6 sets the expiry and re-check triggers rather than a verdict. The overall verdict is computed from them by the total rule above, and the record is JSON, so a policy engine such as Open Policy Agent (OPA) can *check and enforce its invariants* at the deployment gate. The record, as JSON:
 
 ```json
 {
   "model": "frontier-chat-v5", "version": "chat-v5.2", "origin": "cloud",
-  "modified": false, "use_case": "support-agent-order-lookup",
+  "modified": "no", "use_case": "support-agent-order-lookup",
   "rigor": "R3", "regulatory_floor": "none",
   "layers": {"L0":"pass","L1":"pass","L2":"pass","L3":"conditional","L4":"conditional","L5":"pass"},
   "overall": "allow_with_controls", "narrowed_use": null,
   "evidence": [{"layer":"L3","source":"ours","tier":"T2","valid":true}],
-  "guardrails": [{"id":"gr-injection-spotlight","config_version":"3","closes":"L4-F1","last_retest":"2026-08-01"}],
+  "guardrails": [{"id":"gr-injection-spotlight","config_version":"3","closes":"L4-F1","last_retest":"2026-08-01"},
+                 {"id":"gr-intent-tuning","config_version":"1","closes":"L3-F1","last_retest":"2026-08-01"}],
   "re_entry_log": [], "scope_changes": [],
   "risk_transfer_ref": "RTD-482", "risk_transfer_accepted": true,
-  "expires_date": "2026-11-03", "expires_event": "next model-version bump",
+  "expires_date": "2026-10-30", "expires_event": "next model-version bump",
   "approved_by": "j.rivera", "record_status": "append-only", "record_signature": "<sig over the record>"
 }
 ```
@@ -348,8 +350,8 @@ What the Gate puts in one place that none of them give you together: the fail-fa
 1. **Set the stakes (L0).** Describe the use, set the scrutiny level, note the model's origin. If the use is prohibited, stop now.
 2. **Clear the paperwork (L1 to L2).** Confirm where the model came from and that you're allowed to use it. A stop here saves you all the expensive testing below. For a downloaded model, this is most of the work.
 3. **Test the model (L3 to L4).** Check normal behavior, then attack it, scaled to the stakes. For a cloud model, this is most of the work.
-4. **Add the guardrails (L5).** Turn each conditional-pass into a production control, and test that it fires.
-5. **Write it down (L6).** Produce the Model Trust Record, with a re-check trigger and an expiry.
+4. **Add the guardrails (L5).** Turn each conditional-pass into a production control, and test that it brings the finding below the bar, not merely that it fires.
+5. **Set the shelf life and sign (L6).** Set a re-check trigger and an expiry, then produce and sign the Model Trust Record.
 
 The order is the whole point. The cheap checks protect the expensive ones from being wasted, and the record protects the decision from being forgotten or misread.
 
@@ -360,7 +362,7 @@ The order is the whole point. The cheap checks protect the expensive ones from b
 This version adds the recursive triggers, tiered evidence, the Exit Gate, and the policy-engine-ready record. It is still not a full turnkey runbook, and it names what it lacks rather than implying completeness:
 
 - **Operational depth.** The RUNBOOK now supplies the one-page intake and fast-track form, the effort sizing, and default numeric pass-bars for the L3/L4 tests. Still open: a per-layer RACI, and a stated fallback for teams that cannot build out-of-band eval monitoring at R3/R4 (outsource, accept documented residual, or hard-stop).
-- **Compliance artifacts.** L2 now names the AI System Impact Assessment, the FRIA (with its actual Art. 27 trigger and the Art. 27(4) DPIA-reuse route), the provider-status threshold and its Art. 43/49/18 consequences, and the subprocessor chain; the record carries an incident-notification owner and a retention floor. Still missing: an explicit GDPR records-of-processing (Art. 30) hook, and a maintained mapping of Article 73 serious-incident deadlines by jurisdiction.
+- **Compliance artifacts.** L2 now names the AI System Impact Assessment, the FRIA (with its actual Art. 27 trigger and the Art. 27(4) DPIA-reuse route), the provider-status threshold and the duties that attach to it, and the subprocessor chain; the record carries an incident-notification owner and a retention floor. Still missing: an explicit GDPR records-of-processing (Art. 30) hook, and a maintained mapping of Article 73 serious-incident deadlines by jurisdiction.
 - **Stronger evidence.** The claim-verification harness is a directional pilot on small local models, not a definitive measurement.
 
 None of these change the decision the Gate makes. They are the difference between a sound method and a turnkey runbook, and they are the roadmap for the next version.
@@ -372,5 +374,5 @@ None of these change the decision the Gate makes. They are the difference betwee
 The evaluation-integrity argument at Layer 4 rests on recent, still-developing incidents. Their sources:
 
 - Anthropic, *Investigating three real-world incidents in our cybersecurity evaluations* (30 July 2026): https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals
-- The July 2026 Hugging Face intrusion: Hugging Face's own disclosure (https://huggingface.co/blog/security-incident-july-2026) and OpenAI's statement (https://openai.com/index/hugging-face-model-evaluation-security-incident/), with independent reporting by Axios (21 Jul 2026), Time (24 Jul 2026), and Simon Willison (22 Jul 2026). Note the accounts diverge: OpenAI attributes the attack to one of its models escaping an evaluation; Hugging Face could not confirm the model or the motive and describes the vulnerabilities used against it as existing ones, not zero-days.
-- The CSA research note on frontier-model evaluation cheating, drawing on UK AI Safety Institute data (July 2026).
+- The July 2026 Hugging Face intrusion: Hugging Face's own disclosure (https://huggingface.co/blog/security-incident-july-2026) and OpenAI's statement (https://openai.com/index/hugging-face-model-evaluation-security-incident/), with independent reporting by Axios (21 Jul 2026), Time (24 Jul 2026), and Simon Willison (22 Jul 2026). Note the accounts diverge: OpenAI attributes the attack to a combination of its models (including GPT-5.6 Sol and a pre-release research model) escaping an evaluation; Hugging Face could not confirm the model or the motive and describes the vulnerabilities used against it as existing ones, not zero-days.
+- The CSA research note on frontier-model evaluation cheating, drawing on UK AI Security Institute data (July 2026).

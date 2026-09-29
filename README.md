@@ -20,7 +20,7 @@ Two paths, depending on why you are here.
 2. **[RUNBOOK.md](RUNBOOK.md)**: the full runnable method behind the quickstart, a one-page intake, triage, tracks, effort sizing, a per-layer checklist, and default pass-bars.
 3. The worked runbook closest to your case: **[hosted open-weight (Bedrock)](runbooks/bedrock-hosted-open-weight.md)** or **[fine-tuned open-weight](runbooks/fine-tuned-open-weight.md)**, each intake to signed record.
 4. **[starters/](starters/)**: copy-and-edit `promptfoo` (L3) and `garak` (L4) configs so the technical layers are runnable, not just described.
-5. **[templates/](templates/model-trust-record.md)**: the fillable record, a [blank template](templates/model-trust-record.template.json) to copy, the [JSON schema](templates/model-trust-record.schema.json) for policy-engine gating, and two filled examples ([hosted](templates/model-trust-record.bedrock-example.json), [fine-tuned](templates/model-trust-record.fine-tuned-example.json)).
+5. **[templates/](templates/model-trust-record.md)**: the fillable record, a [blank template](templates/model-trust-record.template.json) to copy, the [JSON schema](templates/model-trust-record.schema.json) for policy-engine gating, and two filled examples ([hosted](templates/model-trust-record.bedrock-example.json), [fine-tuned](templates/model-trust-record.fine-tuned-example.json)). Check a record with `python3 tools/validate_record.py <record.json>` (needs `pip install jsonschema`; add `--example` for the shipped examples, which keep placeholder hashes and signatures).
 
 **Understanding or defending the method:**
 
@@ -32,13 +32,27 @@ Two paths, depending on why you are here.
 ## The idea in one screen
 
 <p align="center">
-  <img src="assets/model-trust-gate-diagram.png" alt="The Model Trust Gate: seven ordered checks from L0 to L6, run cheapest first, each ending in pass, conditional pass, or fail. Passing all seven produces a signed, dated Model Trust Record; a fail at any gate stops the sequence and is recorded." width="520">
+  <img src="assets/model-trust-gate-diagram.png" alt="The Model Trust Gate: seven ordered checks from L0 to L6, run cheapest first, each ending in pass, conditional pass, or stop. Passing all seven produces a signed, dated Model Trust Record; a stop at any gate ends the sequence and is recorded." width="520">
 </p>
 
-- **A fail-fast gate.** Seven checks run in order, cheap and administrative first, expensive and technical last, so a model that fails an early check is stopped before you spend on the hard testing.
-- **Scrutiny matches the stakes.** How hard you look is set by a Rigor Level (R1 to R4), driven by four things: the model's autonomy and agency (an agentic AI security scoping model, AWS / CSA lineage), the sensitivity of the data, and the impact of its output on a person or the business.
+- **A fail-fast gate.** Seven checks run in order, cheap and administrative first, expensive and technical last, so a model that fails an early check is stopped before you spend on the hard testing: **L0** set the stakes, **L1** provenance and supply chain, **L2** permission and governance, **L3** behavior, **L4** attack resistance, **L5** guardrails, **L6** upkeep. Each of L0 to L5 ends in **pass**, **conditional** (allowed once a named fix lands) or **stop**.
+- **Scrutiny matches the stakes.** How hard you look is set by a Rigor Level (R1 to R4), driven by four things: autonomy (how independently the model acts), agency (what it can touch), the sensitivity of the data it sees, and the impact of its output on a person or the business. Autonomy and agency are adapted from the AWS and CSA agentic AI security scoping work.
 - **Origin decides where the effort lands.** For a cloud model the work is mostly behavior and attack testing; for a downloaded open-weight model, the supply-chain and legal checks are the hard part.
-- **The output is a record, not a score.** A signed, dated Model Trust Record, scoped to one use, with an expiry.
+- **The output is a record, not a score.** A signed, dated Model Trust Record, scoped to one use, with an expiry. The verdict is one of **Allow**, **Allow with controls**, **Restrict** (to a narrower use) or **Deny**.
+
+What a finished record looks like (excerpt from the [hosted open-weight example](runbooks/bedrock-hosted-open-weight.md)):
+
+```
+Model:            Qwen3-32B (open-lineage, via AWS Bedrock) @ qwen.qwen3-32b-v1:0, pinned 2026-08-25
+Use case:         Internal knowledge assistant over internal docs; read-only, cannot act
+Scrutiny level:   R2      Regulatory floor: none
+Per-layer result: L0 pass · L1 pass · L2 pass · L3 pass · L4 conditional · L5 pass
+Overall:          Allow with controls
+Controls added:   Bedrock Guardrails on input+output, closes L4-F1 (indirect injection via documents)
+Evidence:         each item labelled "ours" or "vendor's"
+Expires:          2027-02-21 (180 days), or earlier if the provider updates the served model version
+Approved by:      a reviewer independent of the requesting team
+```
 
 ## What it composes
 
@@ -54,4 +68,4 @@ Two paths, depending on why you are here.
 
 ---
 
-*Personal working draft. Not affiliated with, nor representing, any employer.*
+*Personal working draft. Not affiliated with, nor representing, any employer. All names, ticket IDs and policies in the examples are invented.*

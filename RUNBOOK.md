@@ -27,7 +27,7 @@ flowchart TD
     X --> R[("Model Trust Record<br/>Allow · Allow with controls · Restrict · Deny")]
 ```
 
-Each layer ends in **pass**, **conditional** (allowed once a named L5 control is added), or **stop** (a Deny that ends the run). The cheap governance layers (L0-L2) come first so an early stop saves the expensive testing (L3-L4). The output is always a scoped record, never "this model is safe."
+Each layer ends in **pass**, **conditional** (allowed once a named fix lands: an L5 control for an L3/L4 finding, a sign-off or contract change for L1/L2), or **stop** (a Deny that ends the run). The cheap governance layers (L0-L2) come first so an early stop saves the expensive testing (L3-L4). The output is always a scoped record, never "this model is safe."
 
 ---
 
@@ -48,7 +48,7 @@ Origin:               cloud API  |  hosted open-weight  |  downloaded open-weigh
 Use case (one line):  <what it does, for whom>
 Can it take actions?  no (read-only) | proposes, human approves | runs multi-step, human oversees | acts on its own
 What can it touch?     read-only | write (bounded) | read-write on consequential systems | privileged/sensitive systems
-Data it sees:          public | internal | regulated / personal
+Data it sees:          public | some internal | customer-facing / internal sensitive | most-sensitive / regulated PII
 Impact of output: none material | low-stakes external effect | materially affects a person | high-stakes decision about a person
 Modified by us?        no | quantized | fine-tuned | merged
 Jurisdictions / laws:  <EU AI Act? sector rules (credit, insurance, health, hiring)? data-residency?>
@@ -69,7 +69,7 @@ Take the **highest** level any single driver reaches. A use that is R4 on one dr
 | **Data** | public | some internal | customer-facing / internal sensitive | most-sensitive / regulated PII |
 | **Impact** | none material | low-stakes external effect | materially affects a person | high-stakes decision about a person |
 
-Then apply the **regulatory floor**: some uses are high-risk by law regardless of the drivers. If the use is an EU AI Act Annex III case (credit scoring, insurance pricing, CV/hiring screening, and the like), it is **at least R4** even if every driver looks low. Record the floor explicitly.
+Then apply the **regulatory floor**: some uses are high-risk by law regardless of the drivers. If the use is an EU AI Act Annex III case (credit scoring, life and health insurance pricing, CV/hiring screening, and the like), it is **at least R4** even if every driver looks low. Record the floor explicitly.
 
 > **Rigor is set here but not frozen.** If L3 or L4 later reveals a capability the intake could not see, re-open this step and raise the level (see the N-1 fallback in the framework). Record the change in the Record's re-entry log.
 
@@ -81,7 +81,7 @@ Then apply the **regulatory floor**: some uses are high-risk by law regardless o
 
 | Track | When | What it means |
 |---|---|---|
-| **Fast track** | **R1 or R2**, and origin is cloud API or hosted open-weight, and not modified by us, and no regulatory floor | The short path below. Governance is light; testing is automated; one reviewer can complete it, typically in well under a day. |
+| **Fast track** | **R1 or R2**, and origin is cloud API or hosted open-weight, and not modified by us, and no regulatory floor | The short path below. Governance is light; testing is automated; one reviewer can complete it, typically in hours to a few days (see effort sizing below). |
 | **Full track** | **R3 or R4**, *or* downloaded open-weight, *or* modified by us, *or* any regulatory floor | Every layer, at full strength. R3/R4 require an approver independent of the requesting team and (R3/R4) a human red-team and out-of-band eval monitoring. |
 
 The fast track is not a lighter *standard*, it is the same gate with the expensive, high-rigor steps that a low-stakes, provider-hosted, unmodified model does not warrant left out. The moment any fast-track condition breaks (a modification appears, a capability discovered at L3/L4 raises rigor to R3), fall back to the full track.
@@ -93,7 +93,7 @@ The fast track is not a lighter *standard*, it is the same gate with the expensi
 3. **L2**: confirm data terms (region/residency; inputs/outputs not used to train base models) and your EU AI Act role. For a **first-time** model origin, do the origin + data-governance sign-off (this is the one place a hosted open-weight model still earns scrutiny).
 4. **L3**: run the automated behavior suite; read the model card; label evidence "ours" vs "vendor's".
 5. **L4**: run the automated attack suite scaled to R1 (smoke) or R2 (pipeline).
-6. **L5**: attach the platform runtime guardrail (e.g. Bedrock Guardrails) on input+output; **verify it fires** against anything L3/L4 surfaced.
+6. **L5**: attach the platform runtime guardrail (e.g. Bedrock Guardrails) on input+output; **verify it drops each L3/L4 finding below the bar**, not merely that it fires.
 7. **L6**: pin the served version; set a re-check trigger and an expiry (180 days is a sane default for R1/R2).
 8. Fill in and sign the [Model Trust Record](templates/model-trust-record.md).
 
@@ -115,7 +115,7 @@ Where the time goes: for cloud and hosted models it sits in L3-L4 (your own test
 
 ## Per-layer checklist (what you actually do)
 
-Each layer ends in one verdict: **pass**, **conditional** (allowed once a named L5 control is added), or **stop** (ends the process, a Deny). Record the verdict and the evidence per layer.
+Each layer ends in one verdict: **pass**, **conditional** (allowed once a named fix lands: an L5 control for L3/L4, a sign-off or contract change for L1/L2, after which that governance layer is recorded pass), or **stop** (ends the process, a Deny). Record the verdict and the evidence per layer.
 
 ### L0: Set the stakes
 - [ ] Intake complete; use case in one line.
@@ -130,7 +130,7 @@ Each layer ends in one verdict: **pass**, **conditional** (allowed once a named 
 
 ### L2: Permission & governance
 - [ ] Data-processing agreement, residency, and subprocessor chain confirmed (who actually runs inference).
-- [ ] EU AI Act role determined (deployer vs provider). *If you modified the model past the ~1/3-training-compute line, re-run this layer under provider obligations (Art. 43/49/18).*
+- [ ] EU AI Act role determined (deployer vs provider). *If you modified a general-purpose model past the ~1/3-training-compute line, re-run this layer under GPAI-provider obligations (Art. 53; Art. 55 if systemic risk). High-risk provider duties (Art. 43/49/18) apply only if you also become provider of a high-risk system under Art. 25(1).*
 - [ ] ISO/IEC 42001 AI System Impact Assessment run (Clause 6.1.4 establish, 8.4 perform); FRIA where Art. 27 applies (DPIA reuse allowed under Art. 27(4)).
 - [ ] Use mapped to specific CSA AICM control IDs (see `standards-crosswalk.md`).
 - [ ] **First-time origin (hosted or downloaded open-weight):** model-origin + data-governance sign-off recorded.
@@ -182,7 +182,7 @@ The framework deliberately ships **no** numeric pass-bars, because the right bar
 | **L4 attack-success rate (ASR)** on the battery | 0 criticals | 0 criticals, ≤ 5% total | 0 criticals, ≤ 2% total, human red-team clean | 0 criticals, ≤ 1% total, strong attacker + independent assessment |
 | **L5 residual after control** | control fires | finding below bar on paraphrase set | finding below bar under R3-strength attack | finding below bar under R4-strength attack |
 
-"Critical" = a finding that, unmitigated, lets an attacker reach data, tools, or actions that matter (e.g. an injection that makes an agent run destructive commands or exfiltrate PII). A single surviving critical is a **stop**, at any rigor.
+"Critical" = a finding that, unmitigated, lets an attacker reach data, tools, or actions that matter (e.g. an injection that makes an agent run destructive commands or exfiltrate PII). A critical that no L5 control can contain is a **stop**, at any rigor.
 
 ---
 
