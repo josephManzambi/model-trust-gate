@@ -52,7 +52,7 @@ Expires:          2027-02-21 (180 days), or earlier if the provider updates the 
 Approved by:      a reviewer independent of the requesting team
 ```
 
-**Status:** working draft (v0.2.1), a personal working document. Facts that still need a primary-source check are tagged `[verify]` in the text.
+**Status:** working draft (v0.2.2), a personal working document. Facts that still need a primary-source check are tagged `[verify]` in the text.
 
 ## What it composes
 
