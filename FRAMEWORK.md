@@ -2,7 +2,7 @@
 
 *A step-by-step way to decide whether your organization should trust a given AI model, for a specific use, with the right amount of scrutiny and a record you can show an auditor.*
 
-**Status:** working draft (v0.2.1). Facts that still need a primary-source check are tagged `[verify]`.
+**Status:** working draft (v0.2.2). Facts that still need a primary-source check are tagged `[verify]`.
 
 ---
 
