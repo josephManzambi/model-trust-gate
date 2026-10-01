@@ -22,6 +22,7 @@ Two paths, depending on why you are here.
 
 **Understanding or defending the method:**
 
+- **[Build, Break, Govern](https://www.manzambi.com/writing/model-trust-gate/)**: the write-up, the method explained in one read with the diagram and the reasoning behind the order of the checks.
 - **[FRAMEWORK.md](FRAMEWORK.md)**: the method in full, the seven-layer gate, Rigor Levels, and the Model Trust Record.
 - **[VALIDATION.md](VALIDATION.md)**: how it holds up, a coverage crosswalk, worked runs, and an attack on the method itself (optional for a first review).
 - **[experiments/claim-verification.md](experiments/claim-verification.md)**: the protocol behind the empirical pilot of the framework's central claim, that self-hosting an open-weight model relocates supply-chain risk onto the adopter. The same folder holds the two probes behind [Don't judge an AI model by its origin](https://www.manzambi.com/writing/dont-judge-an-ai-model-by-its-origin/), which applies the Gate's L3 and L4 to three open models of different origin.
